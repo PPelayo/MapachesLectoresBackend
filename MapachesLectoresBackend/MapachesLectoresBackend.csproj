@@ -26,6 +26,8 @@
 
     <ItemGroup>
       <Folder Include="Core\Presentation\" />
+      <Folder Include="Requests\" />
+      <Folder Include="Reviews\" />
     </ItemGroup>
 
 </Project>

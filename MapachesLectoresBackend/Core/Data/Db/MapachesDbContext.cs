@@ -1,5 +1,7 @@
 ﻿using MapachesLectoresBackend.Books.Data.Db;
 using MapachesLectoresBackend.Books.Domain.Model;
+using MapachesLectoresBackend.Users.Data.Db;
+using MapachesLectoresBackend.Users.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace MapachesLectoresBackend.Core.Data.Db;
@@ -15,6 +17,7 @@ public class MapachesDbContext(DbContextOptions<MapachesDbContext> options) : Db
     
     public DbSet<Publisher> Publishers { get; set; }
     
+    public DbSet<User> Users { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         BookModelCreating.OnModelCreating(modelBuilder);
@@ -24,6 +27,8 @@ public class MapachesDbContext(DbContextOptions<MapachesDbContext> options) : Db
         AuthorModelCreating.OnModelCreating(modelBuilder);
         
         PublisherModelCreating.OnModelCreating(modelBuilder);
+        
+        UserModelCreating.OnModelCreating(modelBuilder);
     }
 
 }
