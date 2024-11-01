@@ -36,5 +36,25 @@ public class BookModelCreating
                 .WithMany(e => e.BooksCategories)
                 .HasForeignKey(e => e.CategoryId);
         });
+
+
+        modelBuilder.ApplyBaseEntityConfig<BooksAuthors>();
+        modelBuilder.Entity<BooksAuthors>(entity =>
+        {
+            entity.ToTable("books_authors");
+            entity.HasKey(e => new { e.BookId, e.AuthorId });
+
+            entity.HasOne<Author>(e => e.Author)
+                .WithMany(e => e.BooksAuthors)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasForeignKey(ba => ba.AuthorId)
+                .HasPrincipalKey(a => a.Id);
+
+            entity.HasOne<Book>(ba => ba.Book)
+                .WithMany(b => b.BooksAuthors)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasForeignKey(ba => ba.BookId)
+                .HasPrincipalKey(b => b.Id);
+        });
     }
 }

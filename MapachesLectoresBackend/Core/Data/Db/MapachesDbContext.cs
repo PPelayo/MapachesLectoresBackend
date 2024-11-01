@@ -10,11 +10,20 @@ public class MapachesDbContext(DbContextOptions<MapachesDbContext> options) : Db
     public DbSet<Category> Categories { get; set; }
     public DbSet<BooksCategories> BooksCategories { get; set; }
     
+    public DbSet<Author> Authors { get; set; }
+    public DbSet<BooksAuthors> BooksAuthors { get; set; }
+    
+    public DbSet<Publisher> Publishers { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         BookModelCreating.OnModelCreating(modelBuilder);
         
         CategoryModelCreating.OnModelCreating(modelBuilder);
+        
+        AuthorModelCreating.OnModelCreating(modelBuilder);
+        
+        PublisherModelCreating.OnModelCreating(modelBuilder);
     }
 
 }
