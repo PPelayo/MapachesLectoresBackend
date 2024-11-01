@@ -1,0 +1,6 @@
+﻿services:
+  mapacheslectoresbackend:
+    image: mapacheslectoresbackend
+    build:
+      context: .
+      dockerfile: MapachesLectoresBackend/Dockerfile

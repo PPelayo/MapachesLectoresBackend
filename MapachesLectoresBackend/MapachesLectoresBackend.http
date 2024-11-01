@@ -1,0 +1,6 @@
+@MapachesLectoresBackend_HostAddress = http://localhost:5012
+
+GET {{MapachesLectoresBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
