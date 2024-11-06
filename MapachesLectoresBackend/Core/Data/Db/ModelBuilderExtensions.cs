@@ -22,11 +22,11 @@ public static class ModelBuilderExtensions
         builder.Property(e => e.CreatedAt)
             .HasColumnType("DATETIME(3)")
             .IsRequired()
-            .HasDefaultValueSql("NOW(3))");
+            .HasDefaultValueSql("NOW(3)");
         
         builder.Property(e => e.UpdatedAt)
             .HasColumnType("DATETIME(3)")
             .IsRequired()
-            .HasDefaultValueSql("NOW(3))"); 
+            .HasDefaultValueSql("NOW(3)"); 
     }
 }

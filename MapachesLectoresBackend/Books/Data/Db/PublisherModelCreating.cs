@@ -16,7 +16,7 @@ public class PublisherModelCreating
 
             entity.HasMany(p => p.Books)
                 .WithOne(b => b.Publisher)
-                .OnDelete(DeleteBehavior.SetNull)
+                // .OnDelete(DeleteBehavior.SetNull) 
                 .HasForeignKey(b => b.PublisherId)
                 .HasPrincipalKey(p => p.Id);
         });
