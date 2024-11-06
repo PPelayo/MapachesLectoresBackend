@@ -22,13 +22,20 @@ builder.Services.AddDbContext<MapachesDbContext>(config =>
     config.UseMySql(connectionString, serverVersion);
 });
 
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    
 }
 
+
+app.MapControllers();
 app.UseHttpsRedirection();
+
+app.Run();
