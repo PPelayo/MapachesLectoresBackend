@@ -4,6 +4,7 @@ namespace MapachesLectoresBackend.Users.Presentation.Controller;
 
 
 [ApiController]
+[Route("[controller]")]
 public class UserController : ControllerBase
 {
     
