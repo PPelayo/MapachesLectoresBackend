@@ -12,4 +12,5 @@ public class User : BaseEntity
     public required string UserName { get; set; }
     [MaxLength(99999)]
     public string Password { get; set; } = null!;
+    public uint Role { get; set; } = 0;
 }
