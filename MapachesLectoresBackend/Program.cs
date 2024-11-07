@@ -1,5 +1,11 @@
 using dotenv.net;
 using MapachesLectoresBackend.Core.Data.Db;
+using MapachesLectoresBackend.Core.Data.Repository;
+using MapachesLectoresBackend.Core.Data.UnitOfWork;
+using MapachesLectoresBackend.Core.Domain.Repository;
+using MapachesLectoresBackend.Core.Domain.UnitOfWork;
+using MapachesLectoresBackend.Core.Presentation.Dtos;
+using MapachesLectoresBackend.Users.Domain.UseCase;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +29,15 @@ builder.Services.AddDbContext<MapachesDbContext>(config =>
 });
 
 builder.Services.AddControllers();
+
+builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+
+
+
+builder.Services.AddScoped<CreateUserUseCase>();
+
+
 
 var app = builder.Build();
 

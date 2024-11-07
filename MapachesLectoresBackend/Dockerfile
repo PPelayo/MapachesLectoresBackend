@@ -56,4 +56,4 @@ ENV ASPNETCORE_ENVIRONMENT=Development
 
 # Comando de inicio de la aplicación
 #CMD ["dotnet", "watch", "run", "--no-restore", "--project", "MapachesLectoresBackend/MapachesLectoresBackend.csproj"]
-CMD ["dotnet", "run"]
+CMD ["dotnet", "run", "--project", "MapachesLectoresBackend/MapachesLectoresBackend.csproj"]

@@ -3,6 +3,7 @@ using MapachesLectoresBackend.Core.Data.Specification;
 using MapachesLectoresBackend.Core.Domain.Model;
 using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.Specification;
+using MapachesLectoresBackend.Core.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace MapachesLectoresBackend.Core.Data.Repository;
@@ -20,5 +21,83 @@ public class BaseRepository<T>(MapachesDbContext dbContext) : IRepository<T> whe
 
         return _dbSet
             .AsQueryable();
+    }
+    
+    
+    // public async Task<IEnumerable<T>> GetAsync(ISpecification<T> spec, IPaginationParameter paginationParameter)
+    // {
+    //     return await ApplySpecification(spec)
+    //         .Skip(paginationParameter.Offset)
+    //         .Take(paginationParameter.PageSize)
+    //         .ToListAsync();
+    // }
+    
+    public Task<int> CountAsync(ISpecification<T> spec)
+    {
+        return ApplySpecification(spec)
+            .CountAsync();
+    }
+
+    public Task<T?> GetFirstAsync(ISpecification<T> spec)
+    {
+        return ApplySpecification(spec)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<T> InsertAsync(T entity)
+    {
+        var currentTime = DateTimeUtils.GetDateTimeUtcWithMiliseconds();
+        entity.CreatedAt = currentTime;
+        entity.UpdatedAt = currentTime;
+        return (await _dbSet.AddAsync(entity)).Entity;
+    }
+
+    public async Task InsertRangeAsync(IEnumerable<T> entities)
+    {
+        var currentTime = DateTimeUtils.GetDateTimeUtcWithMiliseconds();
+        var entitiesList = entities as T[] ?? entities.ToArray();
+        foreach (var entity in entitiesList)
+        {
+            entity.CreatedAt = currentTime;
+            entity.UpdatedAt = currentTime;
+        }
+
+        await _dbSet.AddRangeAsync(entitiesList);
+    }
+
+    public Task DeleteAsync(T entity)
+    {
+        _dbSet.Remove(entity);
+        return Task.CompletedTask;
+    }
+
+    public Task DeleteBySpecAsync(ISpecification<T> spec)
+    {
+        return ApplySpecification(spec)
+            .ExecuteDeleteAsync();
+    }
+
+    public Task<T?> GetByUuidAsync(string uuid)
+    {
+        return _dbSet.FirstOrDefaultAsync(x => x.ItemUuid == uuid);
+    }
+
+    public Task<T> UpdateAsync(T entity)
+    {
+        entity.UpdatedAt = DateTimeUtils.GetDateTimeUtcWithMiliseconds();
+        return Task.FromResult(_dbSet.Update(entity).Entity);
+    }
+
+    public Task UpdateRangeAsync(IEnumerable<T> entities)
+    {
+        var entitiesList = entities as T[] ?? entities.ToArray();
+        var currentTime = DateTimeUtils.GetDateTimeUtcWithMiliseconds();
+        foreach (var entity in entitiesList)
+        {
+            entity.UpdatedAt = currentTime;
+        }
+
+        _dbSet.UpdateRange(entitiesList);
+        return Task.CompletedTask;
     }
 }
