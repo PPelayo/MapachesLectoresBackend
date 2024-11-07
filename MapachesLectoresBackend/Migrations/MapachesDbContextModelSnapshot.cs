@@ -279,6 +279,9 @@ namespace MapachesLectoresBackend.Migrations
                         .HasMaxLength(99999)
                         .HasColumnType("longtext");
 
+                    b.Property<uint>("Role")
+                        .HasColumnType("int unsigned");
+
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME(3)")
