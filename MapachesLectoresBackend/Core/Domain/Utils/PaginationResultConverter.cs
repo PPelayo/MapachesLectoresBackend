@@ -10,10 +10,10 @@ public static class PaginationResultConverter
         var listCount = list.Count();
         return new PaginationResult<T>()
         {
-            Data = list.Take(listCount - 1),
-            HasNext = listCount > queryPagination.Limit,
+            Data = listCount > queryPagination.Limit ? list.Take(queryPagination.Limit - 1) : list,
+            HasNext = listCount > queryPagination.Limit - 1,
             HasPrevious = queryPagination.Offset > 0,
-            Limit = queryPagination.Limit,
+            Limit = queryPagination.Limit - 1,
             Offset = queryPagination.Offset
         };
     }

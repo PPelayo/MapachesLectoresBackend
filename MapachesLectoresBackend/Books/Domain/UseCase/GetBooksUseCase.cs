@@ -1,4 +1,5 @@
 ﻿using MapachesLectoresBackend.Books.Domain.Model;
+using MapachesLectoresBackend.Books.Domain.Specification;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.Utils;
@@ -11,7 +12,10 @@ public class GetBooksUseCase(
 {
     public async Task<PaginationResult<Book>> InvokeAsync(IPagintaion pagintaion)
     {
-        var books = await bookRepository.GetAsync(pagintaion.ToQueryPagination());
+        var spec = new BookSpecifications.IncludesAuthors()
+            .And(new BookSpecifications.IncludesCategories());
+        
+        var books = await bookRepository.GetAsync(pagintaion.ToQueryPagination(), spec);
 
         return books.ToPaginationResult(pagintaion.ToQueryPagination());
     }
