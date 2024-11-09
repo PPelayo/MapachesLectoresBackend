@@ -1,11 +1,12 @@
 ﻿using MapachesLectoresBackend.Core.Domain.Model;
+using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Specification;
 
 namespace MapachesLectoresBackend.Core.Domain.Repository;
 
 public interface IRepository<T> where T : IEntity
 {
-    // public Task<IEnumerable<T>> GetAsync(ISpecification<T> spec, IPaginationParameter paginationParameter);
+    public Task<IEnumerable<T>> GetAsync(IPagintaion paginationParameter, ISpecification<T>? spec = null);
     
     public Task<int> CountAsync(ISpecification<T> spec);
 

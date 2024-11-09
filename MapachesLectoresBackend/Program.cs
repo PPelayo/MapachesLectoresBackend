@@ -1,4 +1,5 @@
 using dotenv.net;
+using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Core.Data.Db;
 using MapachesLectoresBackend.Core.Data.Repository;
 using MapachesLectoresBackend.Core.Data.UnitOfWork;
@@ -30,12 +31,28 @@ builder.Services.AddDbContext<MapachesDbContext>(config =>
 
 builder.Services.AddControllers();
 
+#region CORE
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+#endregion
 
-
-
+#region USER
 builder.Services.AddScoped<CreateUserUseCase>();
+
+#endregion
+
+#region AUTH
+
+#endregion
+
+#region BOOKS
+
+builder.Services.AddScoped<GetBooksUseCase>();
+
+#endregion
+
+
+
 
 
 

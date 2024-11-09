@@ -37,13 +37,13 @@
 
 
 # Imagen base
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS dev
+FROM mcr.microsoft.com/dotnet/sdk:8.0 
 WORKDIR /app
 
 # Copia archivos de proyecto y restaura dependencias
-COPY *.sln .
-COPY ./MapachesLectoresBackend/*.csproj ./MapachesLectoresBackend/
-#RUN #dotnet restore
+COPY *.csproj .
+
+RUN dotnet restore 
 
 # Copia el resto del código
 COPY . .
@@ -56,4 +56,4 @@ ENV ASPNETCORE_ENVIRONMENT=Development
 
 # Comando de inicio de la aplicación
 #CMD ["dotnet", "watch", "run", "--no-restore", "--project", "MapachesLectoresBackend/MapachesLectoresBackend.csproj"]
-CMD ["dotnet", "run", "--project", "MapachesLectoresBackend/MapachesLectoresBackend.csproj"]
+CMD ["dotnet", "run", "--project", "./MapachesLectoresBackend.csproj"]

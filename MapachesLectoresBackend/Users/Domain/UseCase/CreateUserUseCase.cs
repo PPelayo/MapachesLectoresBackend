@@ -1,6 +1,6 @@
-﻿using MapachesLectoresBackend.Core.Domain.Extensions;
+﻿using MapachesLectoresBackend.Auth.Domain.Utils;
+using MapachesLectoresBackend.Core.Domain.Extensions;
 using MapachesLectoresBackend.Core.Domain.Model.ResultPattern;
-using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.UnitOfWork;
 using MapachesLectoresBackend.Users.Domain.Model;
 using MapachesLectoresBackend.Users.Domain.Model.Error;
@@ -22,6 +22,7 @@ public class CreateUserUseCase(
 
         try
         {
+            user.Password = PasswordEncryptor.Encrypt(user, user.Password);
             await userUnitOfWork.BeginTransaction();
             var userCreated = await userUnitOfWork.Repository.InsertAsync(user);
             await userUnitOfWork.Save();

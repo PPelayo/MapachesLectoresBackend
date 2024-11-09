@@ -1,6 +1,7 @@
 ﻿using MapachesLectoresBackend.Core.Data.Db;
 using MapachesLectoresBackend.Core.Data.Specification;
 using MapachesLectoresBackend.Core.Domain.Model;
+using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.Specification;
 using MapachesLectoresBackend.Core.Domain.Utils;
@@ -24,13 +25,13 @@ public class BaseRepository<T>(MapachesDbContext dbContext) : IRepository<T> whe
     }
     
     
-    // public async Task<IEnumerable<T>> GetAsync(ISpecification<T> spec, IPaginationParameter paginationParameter)
-    // {
-    //     return await ApplySpecification(spec)
-    //         .Skip(paginationParameter.Offset)
-    //         .Take(paginationParameter.PageSize)
-    //         .ToListAsync();
-    // }
+    public async Task<IEnumerable<T>> GetAsync(IPagintaion pagintaion, ISpecification<T>? spec = null)
+    {
+        return await ApplySpecification(spec)
+            .Skip(pagintaion.Offset)
+            .Take(pagintaion.Limit)
+            .ToListAsync();
+    }
     
     public Task<int> CountAsync(ISpecification<T> spec)
     {

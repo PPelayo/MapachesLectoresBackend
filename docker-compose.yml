@@ -12,15 +12,16 @@
         - db_data:/var/lib/mysql
   appweb:
     build:
-      context: .
-      dockerfile: MapachesLectoresBackend/Dockerfile
+      context: ./MapachesLectoresBackend
+      dockerfile: Dockerfile
     ports:
       - "4321:4321"
     depends_on:
       - db
-#    volumes:
-#      - .:/app
-#      - nuget_cache:/root/.nuget/packages
+#    command: dotnet watch run  --project /app/MapachesLectoresBackend/MapachesLectoresBackend.csproj
+    volumes:
+      - .:/app
+      - /app/bin
+      - /app/obj
 volumes:
   db_data:
-#  nuget_cache:
