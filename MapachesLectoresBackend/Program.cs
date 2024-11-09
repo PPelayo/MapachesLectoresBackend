@@ -48,6 +48,7 @@ builder.Services.AddScoped<CreateUserUseCase>();
 #region BOOKS
 
 builder.Services.AddScoped<GetBooksUseCase>();
+builder.Services.AddScoped<GetBookByIdUseCase>();
 
 #endregion
 

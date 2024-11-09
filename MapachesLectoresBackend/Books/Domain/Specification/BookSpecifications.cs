@@ -29,4 +29,6 @@ public static class BookSpecifications
             );
         }
     }
+
+    public sealed class GetById(uint id) : BaseSpecification<Book>(entity => entity.Id == id);
 }
