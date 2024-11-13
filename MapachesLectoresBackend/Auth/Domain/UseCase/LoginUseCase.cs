@@ -1,5 +1,6 @@
 ﻿using MapachesLectoresBackend.Auth.Domain.Model.Errors;
 using MapachesLectoresBackend.Auth.Domain.Model.Vo;
+using MapachesLectoresBackend.Auth.Domain.Utils;
 using MapachesLectoresBackend.Core.Domain.Model.ResultPattern;
 using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.UnitOfWork;
@@ -21,8 +22,8 @@ public class LoginUseCase(
         if (user == null)
             return DataResult<JwtVo>.CreateFailure(LoginErrors.EmailOrPasswordIncorrect_400());
 
-        if (user.Password != password)
-            throw new Exception("Invalid password");
+        if(!PasswordEncryptor.ValidatePassword(user, password))
+            return DataResult<JwtVo>.CreateFailure(LoginErrors.EmailOrPasswordIncorrect_400());
 
         throw new NotImplementedException();
     }

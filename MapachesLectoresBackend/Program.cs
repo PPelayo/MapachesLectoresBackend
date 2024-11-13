@@ -1,11 +1,12 @@
 using dotenv.net;
+using MapachesLectoresBackend.Auth.Data.Utils;
+using MapachesLectoresBackend.Auth.Domain.Utils;
 using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Core.Data.Db;
 using MapachesLectoresBackend.Core.Data.Repository;
 using MapachesLectoresBackend.Core.Data.UnitOfWork;
 using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.UnitOfWork;
-using MapachesLectoresBackend.Core.Presentation.Dtos;
 using MapachesLectoresBackend.Users.Domain.UseCase;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,7 +43,7 @@ builder.Services.AddScoped<CreateUserUseCase>();
 #endregion
 
 #region AUTH
-
+builder.Services.AddScoped(typeof(IJwtUtils), typeof(JwtUtils));
 #endregion
 
 #region BOOKS

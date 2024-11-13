@@ -1,8 +1,12 @@
 ﻿namespace MapachesLectoresBackend.Users.Domain.Model.Enums;
 
-public static class UserRoleEnum
+public enum UserRoleEnum
 {
-    public const uint Regular = 0;
-    public const uint Moderator = 1;
-    public const uint Admin = 2;
+    // public const uint Regular = 0;
+    // public const uint Moderator = 1;
+    // public const uint Admin = 2;
+
+    Regular=0,
+    Moderator=1,
+    Admin=2,
 }
