@@ -23,6 +23,18 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(conf =>
+{
+    conf.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin()
+            .Build();
+    });
+});
+
 builder.Services.AddDbContext<MapachesDbContext>(config =>
 {
     // var connectionString = DotNevUtils.Get("MAPACHES_CONNECTION_STRING");
@@ -74,6 +86,7 @@ if (app.Environment.IsDevelopment())
 }
 
 
+app.UseCors("AllowAll");
 app.MapControllers();
 app.UseHttpsRedirection();
 
