@@ -48,6 +48,7 @@ builder.Services.AddScoped<CreateUserUseCase>();
 builder.Services.AddScoped(typeof(IJwtUtils), typeof(JwtUtils));
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<LoginUseCase>();
+builder.Services.AddScoped<RegisterUserUseCase>();
 #endregion
 
 #region BOOKS

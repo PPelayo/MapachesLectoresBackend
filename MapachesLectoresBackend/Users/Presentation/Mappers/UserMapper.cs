@@ -7,6 +7,11 @@ namespace MapachesLectoresBackend.Users.Presentation.Mappers;
 
 public static class UserMapper
 {
+
+    public static UserResponseDto ToResponseDto(this User user){
+        var roleString = Enum.GetName((UserRoleEnum) user.Role);
+        return new UserResponseDto(user.Name, user.UserName, roleString!);
+    }
     public static User ToUser(this CreateUserDto createUserDto)
     {
         return new User
@@ -14,7 +19,7 @@ public static class UserMapper
             Name = createUserDto.Name,
             UserName = createUserDto.UserName,
             Password = createUserDto.Password,
-            Role = UserRoleEnum.Regular
+            Role = (int)UserRoleEnum.Regular
         };
     }
 }

@@ -30,7 +30,6 @@ public class LoginUseCase(
         var refreshToken = jwtService.GenerateRefreshToken(user.ItemUuid, (UserRoleEnum)user.Role);
 
         var wrapper = new JwtsWrapper(accessToken.Value, refreshToken.Value);
-
         return DataResult<JwtsWrapper>.CreateSuccess(wrapper);
     }
 }
