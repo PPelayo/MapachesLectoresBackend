@@ -1,5 +1,7 @@
 using dotenv.net;
 using MapachesLectoresBackend.Auth.Data.Utils;
+using MapachesLectoresBackend.Auth.Domain.Service;
+using MapachesLectoresBackend.Auth.Domain.UseCase;
 using MapachesLectoresBackend.Auth.Domain.Utils;
 using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Core.Data.Db;
@@ -44,6 +46,8 @@ builder.Services.AddScoped<CreateUserUseCase>();
 
 #region AUTH
 builder.Services.AddScoped(typeof(IJwtUtils), typeof(JwtUtils));
+builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<LoginUseCase>();
 #endregion
 
 #region BOOKS
