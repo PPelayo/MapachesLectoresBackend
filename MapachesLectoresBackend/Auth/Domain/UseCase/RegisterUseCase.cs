@@ -31,13 +31,13 @@ public class RegisterUserUseCase(
             await userUnitOfWork.BeginTransaction();
             var user = await CreateUserAndSave(userName, nombre, password);
             await userUnitOfWork.Save();
-            await userUnitOfWork.Commit();
 
             var accessToken = jwtService.GenerateAccessToken(user.ItemUuid, (UserRoleEnum)user.Role);
             var refreshToken = jwtService.GenerateRefreshToken(user.ItemUuid, (UserRoleEnum)user.Role);
 
             var wrapper = new JwtsWrapper(accessToken.Value, refreshToken.Value);
-
+            
+            await userUnitOfWork.Commit();
             return DataResult<RegisterWrapperResponse>.CreateSuccess(new RegisterWrapperResponse(user, wrapper));
         }
         catch (Exception e)

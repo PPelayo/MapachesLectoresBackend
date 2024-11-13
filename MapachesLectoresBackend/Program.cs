@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-DotEnv.Load();
+DotEnv.Load(new DotEnvOptions().WithEnvFiles(".env.dev", ".env"));
 builder.Configuration.AddEnvironmentVariables();
 
 
