@@ -15,21 +15,21 @@ public class LoginUseCase(
     JwtService jwtService
 )
 {
-    public async Task<DataResult<JwtsWrapper>> InvokeAsync(string email, string password)
+    public async Task<DataResult<LoginWrapperResponse>> InvokeAsync(string email, string password)
     {
         var getUserSpec = new UserSpecifications.GetByUserName(email);
         var user = await userRepository.GetFirstAsync(getUserSpec);
 
         if (user == null)
-            return DataResult<JwtsWrapper>.CreateFailure(LoginErrors.EmailOrPasswordIncorrect_400());
+            return DataResult<LoginWrapperResponse>.CreateFailure(LoginErrors.EmailOrPasswordIncorrect_400());
 
         if (!PasswordEncryptor.ValidatePassword(user, password))
-            return DataResult<JwtsWrapper>.CreateFailure(LoginErrors.EmailOrPasswordIncorrect_400());
+            return DataResult<LoginWrapperResponse>.CreateFailure(LoginErrors.EmailOrPasswordIncorrect_400());
 
         var accessToken = jwtService.GenerateAccessToken(user.ItemUuid, (UserRoleEnum)user.Role);
         var refreshToken = jwtService.GenerateRefreshToken(user.ItemUuid, (UserRoleEnum)user.Role);
 
-        var wrapper = new JwtsWrapper(accessToken.Value, refreshToken.Value);
-        return DataResult<JwtsWrapper>.CreateSuccess(wrapper);
+        var tokenWrapper = new JwtsWrapper(accessToken.Value, refreshToken.Value);
+        return DataResult<LoginWrapperResponse>.CreateSuccess(new LoginWrapperResponse(user, tokenWrapper));
     }
 }

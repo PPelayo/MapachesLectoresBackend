@@ -22,7 +22,7 @@ public class AuthController(
         var result = await loginUseCase.InvokeAsync(request.Email, request.Password);
 
         return result.ActionResultHanlder(
-            wrapper => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, wrapper)),
+            wrapper => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, wrapper.ToResponseDto())),
             error => error.ActionResult        
         );
     }
