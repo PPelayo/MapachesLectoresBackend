@@ -65,6 +65,7 @@ builder.Services.AddScoped(typeof(IJwtUtils), typeof(JwtUtils));
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<RegisterUserUseCase>();
+builder.Services.AddScoped<RefreshTokenUseCase>();
 #endregion
 
 #region BOOKS
@@ -92,6 +93,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 app.MapControllers();
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.Run();

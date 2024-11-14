@@ -1,4 +1,5 @@
-﻿using MapachesLectoresBackend.Auth.Domain.UseCase;
+﻿using MapachesLectoresBackend.Auth.Domain.Model.Vo;
+using MapachesLectoresBackend.Auth.Domain.UseCase;
 using MapachesLectoresBackend.Auth.Presentation.Dto;
 using MapachesLectoresBackend.Auth.Presentation.Mapper;
 using MapachesLectoresBackend.Core.Presentation.Dtos;
@@ -12,7 +13,8 @@ namespace MapachesLectoresBackend.Auth.Presentation.Controller;
 [Route("[controller]")]
 public class AuthController(
     LoginUseCase loginUseCase,
-    RegisterUserUseCase registerUserUseCase
+    RegisterUserUseCase registerUserUseCase,
+    RefreshTokenUseCase refreshTokenUseCase
 ) : ControllerBase
 {
 
@@ -38,5 +40,15 @@ public class AuthController(
 
     }
 
+    
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto request)
+    {
+        var result = await refreshTokenUseCase.InvokeAsync(new JwtVo(request.RefreshToken));
+        return result.ActionResultHanlder(
+            jwt => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, jwt.Value)),
+            error => error.ActionResult
+        );
+    }
 
 }
