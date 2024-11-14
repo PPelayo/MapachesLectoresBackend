@@ -5,7 +5,7 @@ using MapachesLectoresBackend.Users.Domain.Model.Enums;
 namespace MapachesLectoresBackend.Core.Presentation.Specification;
 
 
-public class httpContextService : IHttpContextService
+public class HttpContextService : IHttpContextService
 {
     private UserUuidVo? _userUuid;
     public UserUuidVo UserUuid
@@ -24,11 +24,11 @@ public class httpContextService : IHttpContextService
     private UserRoleEnum? _userRole;
     public UserRoleEnum UserRole {
         get {
-            if (_userUuid == null) throw new UnauthorizedAccessException();
+            if (_userRole == null) throw new UnauthorizedAccessException();
             return _userRole!.Value;
         }
         set {
-            if(_userUuid != null) throw new ArgumentException(nameof(UserUuid));
+            if(_userRole != null) throw new ArgumentException("Error al recuperar el Rol del usuario",nameof(UserUuid));
 
             _userRole = value;
         }

@@ -19,12 +19,14 @@ public class UserController(
 {
     
     [Authenticated]
-    [HttpGet]
+    [HttpGet("me")]
     public async Task<IActionResult> GetCurrentUser(){
         var userUuid = httpContextService.UserUuid;
-
-
-        return Ok();        
+        var result = await getUserByIdUseCase.InvokeAsync(userUuid);
+        return result.ActionResultHanlder(
+            user => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, user.ToResponseDto())),
+            error => error.ActionResult
+        );
     }
 
     [HttpPost]

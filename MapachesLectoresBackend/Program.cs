@@ -8,7 +8,9 @@ using MapachesLectoresBackend.Core.Data.Db;
 using MapachesLectoresBackend.Core.Data.Repository;
 using MapachesLectoresBackend.Core.Data.UnitOfWork;
 using MapachesLectoresBackend.Core.Domain.Repository;
+using MapachesLectoresBackend.Core.Domain.Services;
 using MapachesLectoresBackend.Core.Domain.UnitOfWork;
+using MapachesLectoresBackend.Core.Presentation.Specification;
 using MapachesLectoresBackend.Users.Domain.UseCase;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,11 +51,13 @@ builder.Services.AddControllers();
 #region CORE
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+builder.Services.AddScoped(typeof(IHttpContextService), typeof(HttpContextService));
+
 #endregion
 
 #region USER
 builder.Services.AddScoped<CreateUserUseCase>();
-
+builder.Services.AddScoped<GetUserByIdUseCase>();
 #endregion
 
 #region AUTH
