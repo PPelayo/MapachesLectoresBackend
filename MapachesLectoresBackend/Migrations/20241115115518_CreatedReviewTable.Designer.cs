@@ -4,6 +4,7 @@ using MapachesLectoresBackend.Core.Data.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MapachesLectoresBackend.Migrations
 {
     [DbContext(typeof(MapachesDbContext))]
-    partial class MapachesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115115518_CreatedReviewTable")]
+    partial class CreatedReviewTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
