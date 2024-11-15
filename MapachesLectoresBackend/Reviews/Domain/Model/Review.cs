@@ -9,9 +9,13 @@ public class Review : BaseEntity {
 
     public uint Id { get; set; }
     
+    [MaxLength(50)]
     public required string UserId { get; set; }
+    
+    [MaxLength(50)]
     public required string BookId { get; set; }
-
+    
+    [MaxLength(999)]
     public required string Description { get; set; }
 
     [Range(0, 5)]

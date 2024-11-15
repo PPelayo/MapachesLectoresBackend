@@ -3,6 +3,7 @@ using MapachesLectoresBackend.Auth.Data.Utils;
 using MapachesLectoresBackend.Auth.Domain.Service;
 using MapachesLectoresBackend.Auth.Domain.UseCase;
 using MapachesLectoresBackend.Auth.Domain.Utils;
+using MapachesLectoresBackend.Auth.Presentation.Middleware;
 using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Core.Data.Db;
 using MapachesLectoresBackend.Core.Data.Repository;
@@ -11,6 +12,7 @@ using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.Services;
 using MapachesLectoresBackend.Core.Domain.UnitOfWork;
 using MapachesLectoresBackend.Core.Presentation.Specification;
+using MapachesLectoresBackend.Reviews.Domain.UseCase;
 using MapachesLectoresBackend.Users.Domain.UseCase;
 using Microsoft.EntityFrameworkCore;
 
@@ -75,7 +77,11 @@ builder.Services.AddScoped<GetBookByIdUseCase>();
 
 #endregion
 
+#region Review
 
+builder.Services.AddScoped<CreateReviewUseCase>();
+
+#endregion
 
 
 
@@ -92,6 +98,7 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseCors("AllowAll");
+app.UseMiddleware<AuthenticatedMiddleware>();
 app.MapControllers();
 // app.UseHttpsRedirection();
 
