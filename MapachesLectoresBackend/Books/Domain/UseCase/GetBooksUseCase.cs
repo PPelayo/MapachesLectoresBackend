@@ -10,10 +10,13 @@ public class GetBooksUseCase(
     IRepository<Book> bookRepository     
 )
 {
-    public async Task<PaginationResult<Book>> InvokeAsync(IPagintaion pagintaion)
+    public async Task<PaginationResult<Book>> InvokeAsync(IPagintaion pagintaion, string? search = null)
     {
         var spec = new BookSpecifications.IncludesAuthors()
             .And(new BookSpecifications.IncludesCategories());
+
+        if(search != null)
+            spec = spec.And(new BookSpecifications.SearchByName(search));
         
         var books = await bookRepository.GetAsync(pagintaion.ToQueryPagination(), spec);
 

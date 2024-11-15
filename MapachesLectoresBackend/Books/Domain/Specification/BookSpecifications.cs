@@ -31,4 +31,8 @@ public static class BookSpecifications
     }
 
     public sealed class GetById(uint id) : BaseSpecification<Book>(entity => entity.Id == id);
+
+    public sealed class SearchByName(string name)
+        //No usar StringComparation por que no es un metodo apto para SQL Linq
+        : BaseSpecification<Book>(entity => entity.Name.ToLower().Contains(name.ToLower()));
 }

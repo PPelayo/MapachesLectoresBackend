@@ -16,10 +16,11 @@ public class BookController(
     
     [HttpGet]
     public async Task<IActionResult> GetBooks(
-        [FromQuery] UserPagination pagination    
+        [FromQuery] UserPagination pagination,
+        [FromQuery] string? search  
     )
     {
-        var books = await getBooksUseCase.InvokeAsync(pagination);
+        var books = await getBooksUseCase.InvokeAsync(pagination, search);
         return Ok(
             BaseResponse.CreateSuccess(StatusCodes.Status200OK ,books.Map(book => book.ToResponseDto()))
         );
