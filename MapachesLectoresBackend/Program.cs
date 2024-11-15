@@ -80,6 +80,7 @@ builder.Services.AddScoped<GetBookByIdUseCase>();
 #region Review
 
 builder.Services.AddScoped<CreateReviewUseCase>();
+builder.Services.AddScoped<GetReviewsFromBookUseCase>();
 
 #endregion
 

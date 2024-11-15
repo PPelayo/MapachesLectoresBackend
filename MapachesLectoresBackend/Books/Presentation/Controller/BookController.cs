@@ -2,6 +2,8 @@
 using MapachesLectoresBackend.Books.Presentation.Mapper;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Presentation.Dtos;
+using MapachesLectoresBackend.Reviews.Domain.UseCase;
+using MapachesLectoresBackend.Reviews.Presentation.Mapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MapachesLectoresBackend.Books.Presentation.Controller;
@@ -10,7 +12,8 @@ namespace MapachesLectoresBackend.Books.Presentation.Controller;
 [Route("[controller]")]
 public class BookController(
     GetBooksUseCase getBooksUseCase,
-    GetBookByIdUseCase getBookByIdUseCase
+    GetBookByIdUseCase getBookByIdUseCase,
+    GetReviewsFromBookUseCase getReviewsFromBookUseCase
 ) : ControllerBase
 {
     
@@ -35,6 +38,19 @@ public class BookController(
 
         return result.ActionResultHanlder(
             book => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, book.ToResponseDto())),
+            error => error.ActionResult
+        );
+    }
+
+    [HttpGet("{id}/reviews")]
+    public async Task<IActionResult> GetReviews(
+        [FromRoute] Guid id,
+        [FromQuery] UserPagination pagination
+    )
+    {
+        var result = await getReviewsFromBookUseCase.InvokeAsync(id, pagination);
+        return result.ActionResultHanlder(
+            reviews => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, reviews.Map(review => review.ToReviewResponseDto(review.User)))),
             error => error.ActionResult
         );
     }
