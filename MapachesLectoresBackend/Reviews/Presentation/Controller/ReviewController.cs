@@ -16,7 +16,7 @@ public class ReviewController(IHttpContextService contextService ,CreateReviewUs
     [HttpPost]
     public async Task<IActionResult> PostReview([FromBody] CreateReviewRequestDto request)
     {
-        var userId = contextService.UserUuid;
+        var userId = contextService.Uuid;
         
         var result = await createReviewUseCase.InvokeAsync(request.ToCreateReviewDto(userId));
 

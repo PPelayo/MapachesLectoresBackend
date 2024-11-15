@@ -10,11 +10,11 @@ namespace MapachesLectoresBackend.Reviews.Presentation.Mapper;
 
 public static class ReviewMapper
 {
-    public static CreateReviewDto ToCreateReviewDto(this CreateReviewRequestDto request, UserUuidVo userId)
+    public static CreateReviewDto ToCreateReviewDto(this CreateReviewRequestDto request, UuidVo id)
     {
         return new CreateReviewDto(
-            userId,
-            new UserUuidVo(request.BookId) ,
+            id,
+            new UuidVo(request.BookId) ,
             request.Description,
             new RatingVo(request.GeneralRating)
         );

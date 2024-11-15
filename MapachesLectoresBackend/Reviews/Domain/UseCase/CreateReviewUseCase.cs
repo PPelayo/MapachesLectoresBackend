@@ -20,7 +20,7 @@ public class CreateReviewUseCase(
 {
     public async Task<DataResult<Review>> InvokeAsync(CreateReviewDto reviewDto)
     {
-        var validateErrors = await ValidateIfExistsSources(reviewDto.UserId, reviewDto.BookId);
+        var validateErrors = await ValidateIfExistsSources(reviewDto.Id, reviewDto.BookId);
         if(validateErrors != null)
             return DataResult<Review>.CreateFailure(validateErrors);
         
@@ -29,7 +29,7 @@ public class CreateReviewUseCase(
         {
             Description = reviewDto.Description,
             GeneralRating = reviewDto.GeneralRating.Value,
-            UserId = reviewDto.UserId.Value,
+            UserId = reviewDto.Id.Value,
             BookId = reviewDto.BookId.Value,
             PublishDate = DateTime.UtcNow
         };
@@ -46,14 +46,14 @@ public class CreateReviewUseCase(
         }
     }
 
-    private async Task<IError?> ValidateIfExistsSources(UserUuidVo userId, UserUuidVo bookId)
+    private async Task<IError?> ValidateIfExistsSources(UuidVo id, UuidVo bookId)
     {
         var bookSpec = new GetByUuidSpecification<Book>(bookId.Value);
         var book = await bookRepository.GetFirstAsync(bookSpec);
         if (book == null)
             return CreateReviewErrors.InvalidBookId_400();
         
-        var userSpec = new GetByUuidSpecification<User>(userId.Value);
+        var userSpec = new GetByUuidSpecification<User>(id.Value);
         var user = await userRepository.GetFirstAsync(userSpec);
         
         return user == null 

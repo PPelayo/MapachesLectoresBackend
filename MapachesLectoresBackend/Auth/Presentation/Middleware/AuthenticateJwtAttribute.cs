@@ -37,7 +37,7 @@ public class AuthenticatedMiddleware(
             }
 
             // Almacenar datos del token en el contexto
-            httpContextService.UserUuid = new UserUuidVo(validateTokenResult.SuccessResult.Data.userId);
+            httpContextService.Uuid = new UuidVo(validateTokenResult.SuccessResult.Data.userId);
             httpContextService.UserRole = validateTokenResult.SuccessResult.Data.role;
         }
 

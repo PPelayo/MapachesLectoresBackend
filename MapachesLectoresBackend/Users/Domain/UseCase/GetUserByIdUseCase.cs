@@ -13,9 +13,9 @@ public class GetUserByIdUseCase(
 ) {
 
 
-    public async Task<DataResult<User>> InvokeAsync(UserUuidVo userUuid){
+    public async Task<DataResult<User>> InvokeAsync(UuidVo uuid){
 
-        var spec = new GetByUuidSpecification<User>(userUuid.Value);
+        var spec = new GetByUuidSpecification<User>(uuid.Value);
         var user = await userRepository.GetFirstAsync(spec);
 
         if(user == null)
