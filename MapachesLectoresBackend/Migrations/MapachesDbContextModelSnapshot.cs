@@ -262,7 +262,8 @@ namespace MapachesLectoresBackend.Migrations
 
                     b.Property<string>("BookId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -271,7 +272,8 @@ namespace MapachesLectoresBackend.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(999)
+                        .HasColumnType("varchar(999)");
 
                     b.Property<uint>("GeneralRating")
                         .HasColumnType("int unsigned");
@@ -290,7 +292,8 @@ namespace MapachesLectoresBackend.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -298,6 +301,8 @@ namespace MapachesLectoresBackend.Migrations
 
                     b.HasIndex("ItemUuid")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("review", (string)null);
                 });
@@ -410,7 +415,7 @@ namespace MapachesLectoresBackend.Migrations
 
                     b.HasOne("MapachesLectoresBackend.Users.Domain.Model.User", "User")
                         .WithMany()
-                        .HasForeignKey("BookId")
+                        .HasForeignKey("UserId")
                         .HasPrincipalKey("ItemUuid")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();

@@ -24,7 +24,7 @@ public static class ReviewModelCreating {
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasPrincipalKey(u => u.ItemUuid)
-                .HasForeignKey(r => r.BookId);
+                .HasForeignKey(r => r.UserId);
         });
 
     }
