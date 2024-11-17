@@ -20,7 +20,7 @@ public class CreateReviewUseCase(
 {
     public async Task<DataResult<Review>> InvokeAsync(CreateReviewDto reviewDto)
     {
-        var validateErrors = await ValidateIfExistsSources(reviewDto.Id, reviewDto.BookId);
+        var validateErrors = await ValidateIfExistsSources(reviewDto.UserId, reviewDto.BookId);
         if(validateErrors != null)
             return DataResult<Review>.CreateFailure(validateErrors);
         
@@ -29,7 +29,7 @@ public class CreateReviewUseCase(
         {
             Description = reviewDto.Description,
             GeneralRating = reviewDto.GeneralRating.Value,
-            UserId = reviewDto.Id.Value,
+            UserId = reviewDto.UserId.Value,
             BookId = reviewDto.BookId.Value,
             PublishDate = DateTime.UtcNow
         };

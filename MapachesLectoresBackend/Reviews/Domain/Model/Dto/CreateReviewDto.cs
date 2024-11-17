@@ -4,7 +4,7 @@ using MapachesLectoresBackend.Reviews.Domain.Model.Vo;
 namespace MapachesLectoresBackend.Reviews.Domain.Model.Dto;
 
 public record CreateReviewDto(
-    UuidVo Id,
+    UuidVo UserId,
     UuidVo BookId,
     string Description,
     RatingVo GeneralRating
