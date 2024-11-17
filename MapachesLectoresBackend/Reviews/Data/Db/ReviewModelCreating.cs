@@ -12,7 +12,7 @@ public static class ReviewModelCreating {
             entity.ApplyBaseEntityConfig();
             entity.ToTable("review");
 
-            entity.HasKey(e => e.Id);
+            entity.HasKey(e => new { e.BookId, e.UserId });
 
             entity.HasOne(r => r.Book)
                 .WithMany()

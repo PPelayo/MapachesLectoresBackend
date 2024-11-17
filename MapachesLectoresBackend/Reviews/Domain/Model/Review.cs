@@ -7,7 +7,7 @@ namespace MapachesLectoresBackend.Reviews.Domain.Model;
 
 public class Review : BaseEntity {
 
-    public uint Id { get; set; }
+    // public uint Id { get; set; }
     
     [MaxLength(50)]
     public required string UserId { get; set; }
