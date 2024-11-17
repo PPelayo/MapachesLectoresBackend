@@ -1,4 +1,5 @@
-﻿using MapachesLectoresBackend.Core.Presentation.Dtos;
+﻿using System.Text.Json.Serialization;
+using MapachesLectoresBackend.Core.Presentation.Dtos;
 
 namespace MapachesLectoresBackend.Books.Presentation.Dto;
 
@@ -10,6 +11,8 @@ public record BookResponseDto(
     string CoverUrl,
     uint NumberOfPages,
     uint PublisherId,
-    IEnumerable<CategoryResponseDto> Categories,
-    IEnumerable<AuthorResponseDto> Authors
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    IEnumerable<CategoryResponseDto>? Categories,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    IEnumerable<AuthorResponseDto>? Authors
 ) : BaseDtoResponse;

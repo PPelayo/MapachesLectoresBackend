@@ -28,6 +28,11 @@ public static class ReviewMapper
             review.GeneralRating,
             review.PublishDate,
             user?.ToResponseDto()
-        );
+        )
+        {
+            ItemUuid = review.ItemUuid,
+            CreatedAt = review.CreatedAt,
+            UpdatedAt = review.UpdatedAt
+        };
     }
 }

@@ -5,11 +5,15 @@ namespace MapachesLectoresBackend.Books.Presentation.Mapper;
 
 public static class BookMapper
 {
-    public static BookResponseDto ToResponseDto(this Book book)
+    public static BookResponseDto ToResponseDto(this Book book, IEnumerable<Category>? categories = null, IEnumerable<Author>? authors = null)
     {
-
-        var categories = book.BooksCategories.Select(bc => bc.Category.ToCategoryResponseDto());
-        var authors = book.BooksAuthors.Select(ba => ba.Author.ToResponseDto());
+        IEnumerable<CategoryResponseDto>? categoryResponseDtos = null;
+        IEnumerable<AuthorResponseDto>? authorsResponseDtos = null;
+        if(categories != null)
+            categoryResponseDtos = categories.Select(cat => cat.ToCategoryResponseDto());
+        if(authors != null)
+            authorsResponseDtos = authors.Select(author => author.ToResponseDto());
+        
         return new BookResponseDto(
             Id: book.Id,
             Name: book.Name,
@@ -18,8 +22,8 @@ public static class BookMapper
             CoverUrl: book.CoverUrl,
             NumberOfPages: book.NumberOfPages,
             PublisherId: book.PublisherId,
-            Categories: categories,
-            Authors: authors
+            Categories: categoryResponseDtos,
+            Authors: authorsResponseDtos
         )
         {
             ItemUuid = book.ItemUuid,

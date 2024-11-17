@@ -1,9 +1,12 @@
 ﻿using MapachesLectoresBackend.Auth.Presentation.Middleware;
+using MapachesLectoresBackend.Books.Domain.Model;
+using MapachesLectoresBackend.Books.Domain.Specification;
 using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Books.Presentation.Mapper;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Model.Vo;
 using MapachesLectoresBackend.Core.Domain.Services;
+using MapachesLectoresBackend.Core.Domain.UseCase;
 using MapachesLectoresBackend.Core.Presentation.Dtos;
 using MapachesLectoresBackend.Reviews.Domain.UseCase;
 using MapachesLectoresBackend.Reviews.Presentation.Dto;
@@ -17,7 +20,7 @@ namespace MapachesLectoresBackend.Books.Presentation.Controller;
 public class BooksController(
     IHttpContextService contextService,
     GetBooksUseCase getBooksUseCase,
-    GetBookByIdUseCase getBookByIdUseCase,
+    GetItemByUuidUseCase<Book> getItemByUuidUseCase,
     GetReviewsFromBookUseCase getReviewsFromBookUseCase,
     CreateReviewUseCase createReviewUseCase
 ) : ControllerBase
@@ -35,15 +38,23 @@ public class BooksController(
         );
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{bookId}")]
     public async Task<IActionResult> GetBook(
-        [FromRoute] uint id    
+        [FromRoute] Guid bookId    
     )
     {
-        var result = await getBookByIdUseCase.InvokeAsync(id);
+        var includesSpec = new BookSpecifications.IncludesAuthors()
+            .And(new BookSpecifications.IncludesCategories());
+        
+        var result = await getItemByUuidUseCase.InvokeAsync(bookId, includesSpec);
 
         return result.ActionResultHanlder(
-            book => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, book.ToResponseDto())),
+            book =>
+            {
+                var categories = book.BooksCategories.Select(bc => bc.Category);
+                var authors = book.BooksAuthors.Select(ba => ba.Author);
+                return Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, book.ToResponseDto(categories, authors)));
+            },
             error => error.ActionResult
         );
     }

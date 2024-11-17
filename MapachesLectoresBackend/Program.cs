@@ -11,6 +11,7 @@ using MapachesLectoresBackend.Core.Data.UnitOfWork;
 using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.Services;
 using MapachesLectoresBackend.Core.Domain.UnitOfWork;
+using MapachesLectoresBackend.Core.Domain.UseCase;
 using MapachesLectoresBackend.Core.Presentation.Specification;
 using MapachesLectoresBackend.Reviews.Domain.UseCase;
 using MapachesLectoresBackend.Users.Domain.UseCase;
@@ -54,6 +55,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped(typeof(IHttpContextService), typeof(HttpContextService));
+builder.Services.AddScoped(typeof(GetItemByUuidUseCase<>));
 
 #endregion
 
