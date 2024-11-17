@@ -7,6 +7,9 @@ public static class ReviewSpecifications
 {
     public sealed class GetByBookId(Guid bookId) 
         : BaseSpecification<Review>(entity => entity.BookId == bookId.ToString());
+    
+    public sealed class GetByUserId(Guid userId) 
+        : BaseSpecification<Review>(entity => entity.UserId == userId.ToString());
 
     public sealed class IncludesUser : BaseSpecification<Review>
     {

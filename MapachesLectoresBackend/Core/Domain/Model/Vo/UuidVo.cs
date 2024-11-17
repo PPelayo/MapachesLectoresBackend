@@ -1,9 +1,9 @@
 namespace MapachesLectoresBackend.Core.Domain.Model.Vo;
 
 
-public record UuidVo : ValueObject<string>
+public record UuidVo : ValueObject<Guid>
 {
-    public UuidVo(string uuid) : base(uuid)
+    public UuidVo(string uuid) : base(Guid.Parse(uuid))
     {
     }
     

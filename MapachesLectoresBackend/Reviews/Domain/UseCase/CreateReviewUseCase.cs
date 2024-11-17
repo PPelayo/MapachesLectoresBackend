@@ -8,7 +8,9 @@ using MapachesLectoresBackend.Core.Domain.UnitOfWork;
 using MapachesLectoresBackend.Reviews.Domain.Model;
 using MapachesLectoresBackend.Reviews.Domain.Model.Dto;
 using MapachesLectoresBackend.Reviews.Domain.Model.Error;
+using MapachesLectoresBackend.Reviews.Domain.Specification;
 using MapachesLectoresBackend.Users.Domain.Model;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MapachesLectoresBackend.Reviews.Domain.UseCase;
 
@@ -24,13 +26,16 @@ public class CreateReviewUseCase(
         if(validateErrors != null)
             return DataResult<Review>.CreateFailure(validateErrors);
         
+        var reviewExists = await ValidateIfExistsReview(reviewDto.UserId, reviewDto.BookId);
+        if(reviewExists != null)
+            return DataResult<Review>.CreateFailure(reviewExists);
         
         var review = new Review()
         {
             Description = reviewDto.Description,
             GeneralRating = reviewDto.GeneralRating.Value,
-            UserId = reviewDto.UserId.Value,
-            BookId = reviewDto.BookId.Value,
+            UserId = reviewDto.UserId.Value.ToString(),
+            BookId = reviewDto.BookId.Value.ToString(),
             PublishDate = DateTime.UtcNow
         };
 
@@ -51,13 +56,26 @@ public class CreateReviewUseCase(
         var bookSpec = new GetByUuidSpecification<Book>(bookId.Value);
         var book = await bookRepository.GetFirstAsync(bookSpec);
         if (book == null)
-            return CreateReviewErrors.InvalidBookId_400();
+            return CreateReviewErrors.InvalidBookId_404();
         
         var userSpec = new GetByUuidSpecification<User>(id.Value);
         var user = await userRepository.GetFirstAsync(userSpec);
         
         return user == null 
-            ? CreateReviewErrors.InvalidUserId_400() 
+            ? CreateReviewErrors.InvalidUserId_404() 
             : null;
+    }
+
+    private async Task<IError?> ValidateIfExistsReview(UuidVo userId, UuidVo bookId)
+    {
+        var spec = new ReviewSpecifications.GetByBookId(bookId.Value)
+            .And(new ReviewSpecifications.GetByUserId(userId.Value));
+
+        var review = await unitOfWorkReview.Repository.GetFirstAsync(spec);
+
+        return review == null
+            ? null
+            : CreateReviewErrors.UserAlreadyCommented_403();
+
     }
 }
