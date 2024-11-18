@@ -3,6 +3,7 @@ using MapachesLectoresBackend.Auth.Data.Utils;
 using MapachesLectoresBackend.Auth.Domain.Service;
 using MapachesLectoresBackend.Auth.Domain.UseCase;
 using MapachesLectoresBackend.Auth.Domain.Utils;
+using MapachesLectoresBackend.Auth.Presentation.Middleware;
 using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Core.Data.Db;
 using MapachesLectoresBackend.Core.Data.Repository;
@@ -10,7 +11,9 @@ using MapachesLectoresBackend.Core.Data.UnitOfWork;
 using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.Services;
 using MapachesLectoresBackend.Core.Domain.UnitOfWork;
+using MapachesLectoresBackend.Core.Domain.UseCase;
 using MapachesLectoresBackend.Core.Presentation.Specification;
+using MapachesLectoresBackend.Reviews.Domain.UseCase;
 using MapachesLectoresBackend.Users.Domain.UseCase;
 using Microsoft.EntityFrameworkCore;
 
@@ -52,6 +55,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped(typeof(IHttpContextService), typeof(HttpContextService));
+builder.Services.AddScoped(typeof(GetItemByUuidUseCase<>));
 
 #endregion
 
@@ -73,9 +77,16 @@ builder.Services.AddScoped<RefreshTokenUseCase>();
 builder.Services.AddScoped<GetBooksUseCase>();
 builder.Services.AddScoped<GetBookByIdUseCase>();
 
+builder.Services.AddScoped<CreateAuthorUseCase>();
+
 #endregion
 
+#region Review
 
+builder.Services.AddScoped<CreateReviewUseCase>();
+builder.Services.AddScoped<GetReviewsFromBookUseCase>();
+
+#endregion
 
 
 
@@ -92,6 +103,7 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseCors("AllowAll");
+app.UseMiddleware<AuthenticatedMiddleware>();
 app.MapControllers();
 // app.UseHttpsRedirection();
 

@@ -1,5 +1,7 @@
 ﻿using MapachesLectoresBackend.Books.Data.Db;
 using MapachesLectoresBackend.Books.Domain.Model;
+using MapachesLectoresBackend.Reviews.Data.Db;
+using MapachesLectoresBackend.Reviews.Domain.Model;
 using MapachesLectoresBackend.Users.Data.Db;
 using MapachesLectoresBackend.Users.Domain.Model;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +20,8 @@ public class MapachesDbContext(DbContextOptions<MapachesDbContext> options) : Db
     public DbSet<Publisher> Publishers { get; set; }
     
     public DbSet<User> Users { get; set; }
+
+    public DbSet<Review> Reviews => Set<Review>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         BookModelCreating.OnModelCreating(modelBuilder);
@@ -29,6 +33,8 @@ public class MapachesDbContext(DbContextOptions<MapachesDbContext> options) : Db
         PublisherModelCreating.OnModelCreating(modelBuilder);
         
         UserModelCreating.OnModelCreating(modelBuilder);
+
+        ReviewModelCreating.OnModelCreating(modelBuilder);
     }
 
 }

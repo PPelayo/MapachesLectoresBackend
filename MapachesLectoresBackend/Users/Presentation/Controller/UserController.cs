@@ -21,7 +21,7 @@ public class UserController(
     [Authenticated]
     [HttpGet("me")]
     public async Task<IActionResult> GetCurrentUser(){
-        var userUuid = httpContextService.UserUuid;
+        var userUuid = httpContextService.Uuid;
         var result = await getUserByIdUseCase.InvokeAsync(userUuid);
         return result.ActionResultHanlder(
             user => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, user.ToResponseDto())),

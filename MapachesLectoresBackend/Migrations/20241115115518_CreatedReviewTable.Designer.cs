@@ -4,6 +4,7 @@ using MapachesLectoresBackend.Core.Data.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MapachesLectoresBackend.Migrations
 {
     [DbContext(typeof(MapachesDbContext))]
-    partial class MapachesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115115518_CreatedReviewTable")]
+    partial class CreatedReviewTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,13 +257,15 @@ namespace MapachesLectoresBackend.Migrations
 
             modelBuilder.Entity("MapachesLectoresBackend.Reviews.Domain.Model.Review", b =>
                 {
-                    b.Property<string>("BookId")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                    b.Property<uint>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int unsigned");
 
-                    b.Property<string>("UserId")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
+
+                    b.Property<string>("BookId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -269,8 +274,7 @@ namespace MapachesLectoresBackend.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(999)
-                        .HasColumnType("varchar(999)");
+                        .HasColumnType("longtext");
 
                     b.Property<uint>("GeneralRating")
                         .HasColumnType("int unsigned");
@@ -287,12 +291,16 @@ namespace MapachesLectoresBackend.Migrations
                         .HasColumnType("DATETIME(3)")
                         .HasDefaultValueSql("NOW(3)");
 
-                    b.HasKey("BookId", "UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
 
                     b.HasIndex("ItemUuid")
                         .IsUnique();
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("review", (string)null);
                 });
@@ -405,7 +413,7 @@ namespace MapachesLectoresBackend.Migrations
 
                     b.HasOne("MapachesLectoresBackend.Users.Domain.Model.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("BookId")
                         .HasPrincipalKey("ItemUuid")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();

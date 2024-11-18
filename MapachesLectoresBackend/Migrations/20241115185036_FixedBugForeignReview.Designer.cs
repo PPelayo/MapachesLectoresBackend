@@ -4,6 +4,7 @@ using MapachesLectoresBackend.Core.Data.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MapachesLectoresBackend.Migrations
 {
     [DbContext(typeof(MapachesDbContext))]
-    partial class MapachesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115185036_FixedBugForeignReview")]
+    partial class FixedBugForeignReview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,11 +257,14 @@ namespace MapachesLectoresBackend.Migrations
 
             modelBuilder.Entity("MapachesLectoresBackend.Reviews.Domain.Model.Review", b =>
                 {
-                    b.Property<string>("BookId")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                    b.Property<uint>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int unsigned");
 
-                    b.Property<string>("UserId")
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
+
+                    b.Property<string>("BookId")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -287,7 +293,14 @@ namespace MapachesLectoresBackend.Migrations
                         .HasColumnType("DATETIME(3)")
                         .HasDefaultValueSql("NOW(3)");
 
-                    b.HasKey("BookId", "UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
 
                     b.HasIndex("ItemUuid")
                         .IsUnique();

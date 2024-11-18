@@ -6,7 +6,7 @@ namespace MapachesLectoresBackend.Core.Domain.Services;
 
 public interface IHttpContextService {
 
-    public UserUuidVo UserUuid { get; set; }
+    public UuidVo Uuid { get; set; }
     public UserRoleEnum UserRole { get; set; }
 
 }

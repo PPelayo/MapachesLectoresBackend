@@ -33,7 +33,6 @@
 
     <ItemGroup>
       <Folder Include="Requests\" />
-      <Folder Include="Reviews\" />
     </ItemGroup>
 
 </Project>

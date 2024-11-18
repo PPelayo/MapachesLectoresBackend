@@ -19,7 +19,7 @@ public class RefreshTokenUseCase(
         if (result.IsFailure)
             return DataResult<JwtVo>.CreateFailure(result.FailureResult.Error);
         var jwtData = result.SuccessResult.Data;
-        var userResult = await getUserByIdUseCase.InvokeAsync(new UserUuidVo(jwtData.userId));
+        var userResult = await getUserByIdUseCase.InvokeAsync(new UuidVo(jwtData.userId));
         if(userResult.IsFailure)
             return DataResult<JwtVo>.CreateFailure(new UnauthorizedError());
         
