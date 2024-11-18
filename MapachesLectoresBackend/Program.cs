@@ -77,6 +77,8 @@ builder.Services.AddScoped<RefreshTokenUseCase>();
 builder.Services.AddScoped<GetBooksUseCase>();
 builder.Services.AddScoped<GetBookByIdUseCase>();
 
+builder.Services.AddScoped<CreateAuthorUseCase>();
+
 #endregion
 
 #region Review
