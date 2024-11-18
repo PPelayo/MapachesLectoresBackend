@@ -30,6 +30,13 @@ public static class BookSpecifications
         }
     }
 
+    public sealed class IncludesPublisher : BaseSpecification<Book>{
+
+        public IncludesPublisher(){
+            AddInclude(entity => entity.Publisher);
+        }
+    }
+
     public sealed class GetById(uint id) : BaseSpecification<Book>(entity => entity.Id == id);
 
     public sealed class SearchByName(string name)

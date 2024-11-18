@@ -44,7 +44,8 @@ public class BooksController(
     )
     {
         var includesSpec = new BookSpecifications.IncludesAuthors()
-            .And(new BookSpecifications.IncludesCategories());
+            .And(new BookSpecifications.IncludesCategories())
+            .And(new BookSpecifications.IncludesPublisher());
         
         var result = await getItemByUuidUseCase.InvokeAsync(bookId, includesSpec);
 

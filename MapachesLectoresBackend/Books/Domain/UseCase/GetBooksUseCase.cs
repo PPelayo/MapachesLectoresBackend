@@ -13,7 +13,8 @@ public class GetBooksUseCase(
     public async Task<PaginationResult<Book>> InvokeAsync(IPagintaion pagintaion, string? search = null)
     {
         var spec = new BookSpecifications.IncludesAuthors()
-            .And(new BookSpecifications.IncludesCategories());
+            .And(new BookSpecifications.IncludesCategories())
+            .And(new BookSpecifications.IncludesPublisher());
 
         if(search != null)
             spec = spec.And(new BookSpecifications.SearchByName(search));
