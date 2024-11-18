@@ -1,12 +1,9 @@
 ﻿using MapachesLectoresBackend.Auth.Presentation.Middleware;
-using MapachesLectoresBackend.Books.Domain.Model;
-using MapachesLectoresBackend.Books.Domain.Specification;
 using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Books.Presentation.Mapper;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Model.Vo;
 using MapachesLectoresBackend.Core.Domain.Services;
-using MapachesLectoresBackend.Core.Domain.UseCase;
 using MapachesLectoresBackend.Core.Presentation.Dtos;
 using MapachesLectoresBackend.Reviews.Domain.UseCase;
 using MapachesLectoresBackend.Reviews.Presentation.Dto;
@@ -20,7 +17,7 @@ namespace MapachesLectoresBackend.Books.Presentation.Controller;
 public class BooksController(
     IHttpContextService contextService,
     GetBooksUseCase getBooksUseCase,
-    GetItemByUuidUseCase<Book> getItemByUuidUseCase,
+    GetBookByUuidUseCase getBookByUuidUseCase,
     GetReviewsFromBookUseCase getReviewsFromBookUseCase,
     CreateReviewUseCase createReviewUseCase
 ) : ControllerBase
@@ -33,8 +30,14 @@ public class BooksController(
     )
     {
         var books = await getBooksUseCase.InvokeAsync(pagination, search);
+        var booksResponses = books.Map(book =>
+        {
+            var categories = book.BooksCategories.Select(bc => bc.Category);
+            var authors = book.BooksAuthors.Select(ba => ba.Author);
+            return book.ToResponseDto(categories, authors, book.Publisher);
+        });
         return Ok(
-            BaseResponse.CreateSuccess(StatusCodes.Status200OK ,books.Map(book => book.ToResponseDto()))
+            BaseResponse.CreateSuccess(StatusCodes.Status200OK ,booksResponses)
         );
     }
 
@@ -43,18 +46,14 @@ public class BooksController(
         [FromRoute] Guid bookId    
     )
     {
-        var includesSpec = new BookSpecifications.IncludesAuthors()
-            .And(new BookSpecifications.IncludesCategories())
-            .And(new BookSpecifications.IncludesPublisher());
-        
-        var result = await getItemByUuidUseCase.InvokeAsync(bookId, includesSpec);
+        var result = await getBookByUuidUseCase.InvokeAsync(bookId);
 
         return result.ActionResultHanlder(
             book =>
             {
                 var categories = book.BooksCategories.Select(bc => bc.Category);
                 var authors = book.BooksAuthors.Select(ba => ba.Author);
-                return Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, book.ToResponseDto(categories, authors)));
+                return Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, book.ToResponseDto(categories, authors, book.Publisher)));
             },
             error => error.ActionResult
         );
@@ -68,7 +67,8 @@ public class BooksController(
     {
         var result = await getReviewsFromBookUseCase.InvokeAsync(bookId, pagination);
         return result.ActionResultHanlder(
-            reviews => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, reviews.Map(review => review.ToReviewResponseDto(review.User)))),
+            reviews => 
+                Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, reviews.Map(review => review.ToReviewResponseDto(review.User)))),
             error => error.ActionResult
         );
     }

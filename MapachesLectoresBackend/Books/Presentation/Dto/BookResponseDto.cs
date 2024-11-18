@@ -12,7 +12,9 @@ public record BookResponseDto(
     uint NumberOfPages,
     uint PublisherId,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    IEnumerable<CategoryResponseDto>? Categories,
+    IEnumerable<CategoryResponseDto>? Categories = null,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    IEnumerable<AuthorResponseDto>? Authors
+    IEnumerable<AuthorResponseDto>? Authors = null,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    PublisherResponseDto? Publisher = null
 ) : BaseDtoResponse;

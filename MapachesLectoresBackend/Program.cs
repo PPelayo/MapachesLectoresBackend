@@ -76,6 +76,7 @@ builder.Services.AddScoped<RefreshTokenUseCase>();
 
 builder.Services.AddScoped<GetBooksUseCase>();
 builder.Services.AddScoped<GetBookByIdUseCase>();
+builder.Services.AddScoped<GetBookByUuidUseCase>();
 
 builder.Services.AddScoped<CreateAuthorUseCase>();
 
