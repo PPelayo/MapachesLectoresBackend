@@ -2,5 +2,13 @@
 
 namespace MapachesLectoresBackend.Core.Domain.Specification;
 
-// public sealed class GetByUuidsSpecification<T>(ISet<Guid> uuids)
-//     : BaseSpecification<T>(entity => uuids.Contains(entity.ItemUuid)) where T : class, IEntity;
+public sealed class GetByUuidsSpecification<T>
+    : BaseSpecification<T> where T : class, IEntity
+{
+    public GetByUuidsSpecification(ISet<Guid> uuids)
+    {
+        var stringUuids = uuids.Select(u => u.ToString()).ToHashSet();
+        
+        SetCriteria(entity => stringUuids.Contains(entity.ItemUuid));
+    }
+}

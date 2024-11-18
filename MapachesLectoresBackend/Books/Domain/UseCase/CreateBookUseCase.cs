@@ -2,27 +2,30 @@
 using MapachesLectoresBackend.Books.Domain.Model.Dto;
 using MapachesLectoresBackend.Books.Domain.Model.Error;
 using MapachesLectoresBackend.Books.Domain.Specification;
+using MapachesLectoresBackend.Books.Domain.UnitOfWork;
 using MapachesLectoresBackend.Core.Domain.Extensions;
 using MapachesLectoresBackend.Core.Domain.Model.Errors;
+using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Model.ResultPattern;
-using MapachesLectoresBackend.Core.Domain.Repository;
-using MapachesLectoresBackend.Core.Domain.UnitOfWork;
+using MapachesLectoresBackend.Core.Domain.Specification;
 using MapachesLectoresBackend.Core.Domain.UseCase;
 
 namespace MapachesLectoresBackend.Books.Domain.UseCase;
 
 public class CreateBookUseCase(
-    IGenericUnitOfWork<Book> bookUnitOfWork,
     GetItemByUuidUseCase<Publisher> getPublisherByUuidUseCase,
-    IRepository<Author> authorRepository,
-    GetItemByUuidUseCase<Category> getCategoryByUuidUseCase
+    ICreateBookUnitOfWork unitOfWork
 )
 {
+    
+    private const int MaxAuthors = 1000;
+    private const int MaxCategories = 1000;
+    
     public async Task<DataResult<Book>> InvokeAsync(CreateBookRequestDto request)
     {
         var spec = new BookSpecifications.GetByName(request.Name);
 
-        var posibleBook = await bookUnitOfWork.Repository.GetFirstAsync(spec);
+        var posibleBook = await unitOfWork.BookRepository.GetFirstAsync(spec);
 
         if (posibleBook != null)
             return DataResult<Book>.CreateFailure(new ResourceAlreadyExists(nameof(Book)));
@@ -32,7 +35,20 @@ public class CreateBookUseCase(
             return DataResult<Book>.CreateFailure(CreateBookErrors.PublisherNotFound_400());
         var publisher = publisherResult.SuccessResult.Data;
         
+        if(!request.Authors.Any())
+            return DataResult<Book>.CreateFailure(CreateBookErrors.AuthorNotFound_400());
         
+        if(request.Authors.Count > MaxAuthors)
+            return DataResult<Book>.CreateFailure(CreateBookErrors.ToManyAuthors_400());
+
+        if (!request.Categories.Any())
+            return DataResult<Book>.CreateFailure(CreateBookErrors.CategoriesNotFound_400());
+        
+        if(request.Categories.Count > MaxCategories)
+            return DataResult<Book>.CreateFailure(CreateBookErrors.ToManyCategories_400());
+
+        var authors = await GetAuthors(request.Authors);
+        var categories = await GetCategories(request.Categories);
         try
         {
             var bookToInsert = new Book()
@@ -44,25 +60,59 @@ public class CreateBookUseCase(
                 CoverUrl = "",
                 PublisherId = publisher.Id
             };
+            
+            
+            var bookAuthors = authors.Select(author => new BooksAuthors()
+            {
+                AuthorId = author.Id,
+                Book = bookToInsert
+            });
 
-            await bookUnitOfWork.BeginTransaction();
-            var bookInserted = await bookUnitOfWork.Repository.InsertAsync(bookToInsert);
-            await bookUnitOfWork.Save();
-            await bookUnitOfWork.Commit();
+            var bookCategories = categories.Select(category => new BooksCategories()
+            {
+                CategoryId = category.Id,
+                Book = bookToInsert
+            });
+
+            await unitOfWork.BookAuthorsRepository.InsertRangeAsync(bookAuthors);
+            await unitOfWork.BookCategoriesRepository.InsertRangeAsync(bookCategories);
+            
+            await unitOfWork.BeginTransaction();
+            var bookInserted = await unitOfWork.BookRepository.InsertAsync(bookToInsert);
+            await unitOfWork.Save();
+            await unitOfWork.Commit();
 
             return DataResult<Book>.CreateSuccess(bookInserted);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            await bookUnitOfWork.Rollback();
+            await unitOfWork.Rollback();
             return DataResult<Book>.CreateFailure(ex.CreateExceptionResult());
         }
     }
 
-    // private async Task<IEnumerable<Author>> GetAuthors(IEnumerable<Guid> authorIds)
-    // {
-    //     
-    // }
+    private async Task<IEnumerable<Author>> GetAuthors(ISet<Guid> authorIds)
+    {
+        var spec = new GetByUuidsSpecification<Author>(authorIds);
+        var pagination = new UserPagination
+        {
+            Limit = MaxAuthors
+        };
+        var authors = await unitOfWork.AuthorRepository.GetAsync(pagination, spec);
+        
+        return authors;
+    }
+
+    private async Task<IEnumerable<Category>> GetCategories(ISet<Guid> categoriesIds)
+    {
+        var spec = new GetByUuidsSpecification<Category>(categoriesIds);
+        var pagination = new UserPagination
+        {
+            Limit = MaxCategories
+        };
+        var categories = await unitOfWork.CategoriesRepository.GetAsync(pagination, spec);
+        return categories;
+    }
     
 }

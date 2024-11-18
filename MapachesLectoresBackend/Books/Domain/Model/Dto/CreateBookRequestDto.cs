@@ -6,6 +6,6 @@ public record CreateBookRequestDto(
     DateTime PublishedDate,
     uint NumberOfPages,
     Guid PublisherId,
-    IEnumerable<Guid> Authors,
-    IEnumerable<Guid> Categories
+    ISet<Guid> Authors,
+    ISet<Guid> Categories
 );

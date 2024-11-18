@@ -4,6 +4,8 @@ using MapachesLectoresBackend.Auth.Domain.Service;
 using MapachesLectoresBackend.Auth.Domain.UseCase;
 using MapachesLectoresBackend.Auth.Domain.Utils;
 using MapachesLectoresBackend.Auth.Presentation.Middleware;
+using MapachesLectoresBackend.Books.Data.UnitOfWork;
+using MapachesLectoresBackend.Books.Domain.UnitOfWork;
 using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Core.Data.Db;
 using MapachesLectoresBackend.Core.Data.Repository;
@@ -77,10 +79,13 @@ builder.Services.AddScoped<RefreshTokenUseCase>();
 builder.Services.AddScoped<GetBooksUseCase>();
 builder.Services.AddScoped<GetBookByIdUseCase>();
 builder.Services.AddScoped<GetBookByUuidUseCase>();
+builder.Services.AddScoped<CreateBookUseCase>();
 
 builder.Services.AddScoped<CreateAuthorUseCase>();
 
 builder.Services.AddScoped<CreatePublisherUseCase>();
+
+builder.Services.AddScoped<ICreateBookUnitOfWork, CreateBookUnitOfWork>();
 
 #endregion
 

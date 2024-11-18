@@ -1,4 +1,5 @@
 ﻿using MapachesLectoresBackend.Auth.Presentation.Middleware;
+using MapachesLectoresBackend.Books.Domain.Model.Dto;
 using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Books.Presentation.Mapper;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
@@ -19,7 +20,8 @@ public class BooksController(
     GetBooksUseCase getBooksUseCase,
     GetBookByUuidUseCase getBookByUuidUseCase,
     GetReviewsFromBookUseCase getReviewsFromBookUseCase,
-    CreateReviewUseCase createReviewUseCase
+    CreateReviewUseCase createReviewUseCase,
+    CreateBookUseCase createBookUseCase
 ) : ControllerBase
 {
     
@@ -61,9 +63,20 @@ public class BooksController(
 
     [Authenticated]
     [HttpPost]
-    public async Task<IActionResult> CreateBook()
+    public async Task<IActionResult> CreateBook(
+        [FromBody] CreateBookRequestDto request
+    )
     {
-        return Ok();
+        var result = await createBookUseCase.InvokeAsync(request);
+        return result.ActionResultHanlder(
+            book =>
+            {
+                var categories = book.BooksCategories.Select(bc => bc.Category);
+                var authors = book.BooksAuthors.Select(ba => ba.Author);
+                return Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, book.ToResponseDto(categories, authors, book.Publisher)));
+            },
+            error => error.ActionResult
+        );
     }   
 
     [HttpGet("{bookId}/reviews")]
