@@ -59,6 +59,13 @@ public class BooksController(
         );
     }
 
+    [Authenticated]
+    [HttpPost]
+    public async Task<IActionResult> CreateBook()
+    {
+        return Ok();
+    }   
+
     [HttpGet("{bookId}/reviews")]
     public async Task<IActionResult> GetReviews(
         [FromRoute] Guid bookId,
