@@ -69,12 +69,7 @@ public class BooksController(
     {
         var result = await createBookUseCase.InvokeAsync(request);
         return result.ActionResultHanlder(
-            book =>
-            {
-                var categories = book.BooksCategories.Select(bc => bc.Category);
-                var authors = book.BooksAuthors.Select(ba => ba.Author);
-                return Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, book.ToResponseDto(categories, authors, book.Publisher)));
-            },
+            book => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, book.ToResponseDto())),
             error => error.ActionResult
         );
     }   

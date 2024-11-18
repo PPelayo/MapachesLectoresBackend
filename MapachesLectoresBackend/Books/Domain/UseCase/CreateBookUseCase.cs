@@ -47,8 +47,13 @@ public class CreateBookUseCase(
         if(request.Categories.Count > MaxCategories)
             return DataResult<Book>.CreateFailure(CreateBookErrors.ToManyCategories_400());
 
-        var authors = await GetAuthors(request.Authors);
-        var categories = await GetCategories(request.Categories);
+        var authors = (await GetAuthors(request.Authors)).ToList();
+        if(authors.Count == 0)
+            return DataResult<Book>.CreateFailure(CreateBookErrors.AuthorNotFound_400());
+        
+        var categories = (await GetCategories(request.Categories)).ToList();
+        if(categories.Count == 0)
+            return DataResult<Book>.CreateFailure(CreateBookErrors.CategoriesNotFound_400());
         try
         {
             var bookToInsert = new Book()
@@ -74,11 +79,11 @@ public class CreateBookUseCase(
                 Book = bookToInsert
             });
 
-            await unitOfWork.BookAuthorsRepository.InsertRangeAsync(bookAuthors);
-            await unitOfWork.BookCategoriesRepository.InsertRangeAsync(bookCategories);
             
             await unitOfWork.BeginTransaction();
             var bookInserted = await unitOfWork.BookRepository.InsertAsync(bookToInsert);
+            await unitOfWork.BookCategoriesRepository.InsertRangeAsync(bookCategories);
+            await unitOfWork.BookAuthorsRepository.InsertRangeAsync(bookAuthors);
             await unitOfWork.Save();
             await unitOfWork.Commit();
 
@@ -100,7 +105,6 @@ public class CreateBookUseCase(
             Limit = MaxAuthors
         };
         var authors = await unitOfWork.AuthorRepository.GetAsync(pagination, spec);
-        
         return authors;
     }
 

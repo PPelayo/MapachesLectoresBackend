@@ -1,3 +1,4 @@
+using MapachesLectoresBackend.Auth.Presentation.Middleware;
 using MapachesLectoresBackend.Books.Domain.Model.Dto;
 using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Books.Presentation.Mapper;
@@ -13,6 +14,8 @@ public class AuthorsController(
     CreateAuthorUseCase createAuthorUseCase
 ) : ControllerBase {
 
+    [Authenticated]
+    [HttpPost]
     public async Task<IActionResult> CreateAuthor(
         [FromBody] CreateAuthorRequestDto request
     ){
