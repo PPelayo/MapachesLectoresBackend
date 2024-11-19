@@ -72,7 +72,16 @@ public class BooksController(
             book => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, book.ToResponseDto())),
             error => error.ActionResult
         );
-    }   
+    }
+
+    [Authenticated]
+    [HttpPatch("{bookId}")]
+    public async Task<IActionResult> UpdateImage(IFormFile file)
+    {
+
+
+        return Ok();
+    }  
 
     [HttpGet("{bookId}/reviews")]
     public async Task<IActionResult> GetReviews(
