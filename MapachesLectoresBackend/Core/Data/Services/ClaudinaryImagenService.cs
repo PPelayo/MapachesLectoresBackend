@@ -26,8 +26,8 @@ namespace MapachesLectoresBackend.Core.Data.Services
         {
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(publicId, image),
-                PublicId = publicId,
+                File = new FileDescription($"{type}-{publicId}", image),
+                PublicId = $"{type}-{publicId}",
                 Format = "webp"
             };
 

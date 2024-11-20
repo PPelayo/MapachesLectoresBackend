@@ -21,7 +21,8 @@ public class BooksController(
     GetBookByUuidUseCase getBookByUuidUseCase,
     GetReviewsFromBookUseCase getReviewsFromBookUseCase,
     CreateReviewUseCase createReviewUseCase,
-    CreateBookUseCase createBookUseCase
+    CreateBookUseCase createBookUseCase,
+    UploadImageBookUseCase uploadImageBookUseCase
 ) : ControllerBase
 {
     
@@ -76,11 +77,17 @@ public class BooksController(
 
     [Authenticated]
     [HttpPatch("{bookId}")]
-    public async Task<IActionResult> UpdateImage(IFormFile file)
+    public async Task<IActionResult> UpdateImage(
+        [FromRoute] Guid bookId,
+        [FromBody]IFormFile file
+    )
     {
+        var result = await uploadImageBookUseCase.InvokeAsync(file, bookId);
 
-
-        return Ok();
+        return result.ActionResultHanlder(
+            uri => Ok(BaseResponse.CreateSuccess(200, uri.AbsoluteUri)),
+            error => error.ActionResult
+        );
     }  
 
     [HttpGet("{bookId}/reviews")]
