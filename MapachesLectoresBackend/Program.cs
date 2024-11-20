@@ -82,6 +82,7 @@ builder.Services.AddScoped<GetBookByUuidUseCase>();
 builder.Services.AddScoped<CreateBookUseCase>();
 
 builder.Services.AddScoped<CreateAuthorUseCase>();
+builder.Services.AddScoped<GetAuthorsUseCase>();
 
 builder.Services.AddScoped<CreatePublisherUseCase>();
 
