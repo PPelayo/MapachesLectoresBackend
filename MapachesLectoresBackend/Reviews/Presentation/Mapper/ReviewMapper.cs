@@ -25,6 +25,7 @@ public static class ReviewMapper
     {
         return new ReviewResponseDto(
             review.BookId,
+            review.Title,
             review.Description,
             review.GeneralRating,
             review.PublishDate,

@@ -14,5 +14,5 @@ public static class AuthorSpecifications {
 
     public sealed class SearchByNameAndLastName(string search)
         : BaseSpecification<Author>(entity => 
-            entity.Name.Concat(entity.LastName).ToString()!.Trim().ToLower().Contains(search.Trim().ToLower()));
+           (entity.Name + " " + entity.LastName).Trim().ToLower().Contains(search.Trim().ToLower()));
 }

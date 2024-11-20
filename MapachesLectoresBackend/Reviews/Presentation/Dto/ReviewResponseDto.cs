@@ -6,6 +6,7 @@ namespace MapachesLectoresBackend.Reviews.Presentation.Dto;
 
 public record ReviewResponseDto(
     string BookId,
+    string Title,
     string Description,
     uint GeneralRating,
     DateTime PublishDateUtc,

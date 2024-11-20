@@ -9,6 +9,7 @@ using MapachesLectoresBackend.Books.Domain.UnitOfWork;
 using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Core.Data.Db;
 using MapachesLectoresBackend.Core.Data.Repository;
+using MapachesLectoresBackend.Core.Data.Services;
 using MapachesLectoresBackend.Core.Data.UnitOfWork;
 using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.Services;
@@ -56,8 +57,12 @@ builder.Services.AddControllers();
 #region CORE
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+
 builder.Services.AddScoped(typeof(IHttpContextService), typeof(HttpContextService));
+builder.Services.AddScoped<IImagenService, ClaudinaryImagenService>();
+
 builder.Services.AddScoped(typeof(GetItemByUuidUseCase<>));
+
 
 #endregion
 
@@ -80,6 +85,7 @@ builder.Services.AddScoped<GetBooksUseCase>();
 builder.Services.AddScoped<GetBookByIdUseCase>();
 builder.Services.AddScoped<GetBookByUuidUseCase>();
 builder.Services.AddScoped<CreateBookUseCase>();
+builder.Services.AddScoped <UploadImageBookUseCase>();
 
 builder.Services.AddScoped<CreateAuthorUseCase>();
 builder.Services.AddScoped<GetAuthorsUseCase>();

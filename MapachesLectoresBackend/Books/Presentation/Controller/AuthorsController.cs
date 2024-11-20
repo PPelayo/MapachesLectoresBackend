@@ -38,6 +38,6 @@ public class AuthorsController(
     {
         var result = await getAuthorsUseCase.InvokeAsync(pagination, search);
 
-        return Ok(result.Map(author => author.ToResponseDto()));
+        return Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK,result.Map(author => author.ToResponseDto())));
     }
 }
