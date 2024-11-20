@@ -14,6 +14,9 @@ public class Review : BaseEntity {
     
     [MaxLength(50)]
     public required string BookId { get; set; }
+
+    [MaxLength(255)]
+    public required string Title { get; set; }
     
     [MaxLength(999)]
     public required string Description { get; set; }

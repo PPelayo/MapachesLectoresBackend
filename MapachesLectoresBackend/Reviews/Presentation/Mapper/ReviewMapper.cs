@@ -13,6 +13,7 @@ public static class ReviewMapper
     public static CreateReviewDto ToCreateReviewDto(this CreateReviewRequestDto request, UuidVo userId, UuidVo bookId)
     {
         return new CreateReviewDto(
+            Title: request.Title,
             userId,
             bookId ,
             request.Description,

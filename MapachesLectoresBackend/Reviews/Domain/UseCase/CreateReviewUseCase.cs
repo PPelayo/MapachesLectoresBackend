@@ -32,6 +32,7 @@ public class CreateReviewUseCase(
         
         var review = new Review()
         {
+            Title = reviewDto.Title,
             Description = reviewDto.Description,
             GeneralRating = reviewDto.GeneralRating.Value,
             UserId = reviewDto.UserId.Value.ToString(),
