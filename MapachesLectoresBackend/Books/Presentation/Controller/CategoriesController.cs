@@ -18,7 +18,7 @@ namespace MapachesLectoresBackend.Books.Presentation.Controller
         [ProducesResponseType(typeof(BaseGenericResponse<PaginationResult<CategoryResponseDto>, string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetCategories(
             [FromQuery] UserPagination pagination,
-            [FromQuery] string search
+            [FromQuery] string? search
         )
         {
 
