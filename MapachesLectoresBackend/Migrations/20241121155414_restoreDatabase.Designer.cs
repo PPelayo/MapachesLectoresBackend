@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MapachesLectoresBackend.Migrations
 {
     [DbContext(typeof(MapachesDbContext))]
-    [Migration("20241115185036_FixedBugForeignReview")]
-    partial class FixedBugForeignReview
+    [Migration("20241121155414_restoreDatabase")]
+    partial class restoreDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -257,14 +257,11 @@ namespace MapachesLectoresBackend.Migrations
 
             modelBuilder.Entity("MapachesLectoresBackend.Reviews.Domain.Model.Review", b =>
                 {
-                    b.Property<uint>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int unsigned");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
-
                     b.Property<string>("BookId")
-                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("UserId")
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -288,19 +285,17 @@ namespace MapachesLectoresBackend.Migrations
                     b.Property<DateTime>("PublishDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME(3)")
                         .HasDefaultValueSql("NOW(3)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
+                    b.HasKey("BookId", "UserId");
 
                     b.HasIndex("ItemUuid")
                         .IsUnique();

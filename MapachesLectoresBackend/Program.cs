@@ -47,7 +47,7 @@ builder.Services.AddDbContext<MapachesDbContext>(config =>
 {
     // var connectionString = DotNevUtils.Get("MAPACHES_CONNECTION_STRING");
     var connectionString = builder.Configuration["MAPACHES_CONNECTION_STRING"];
-    var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
+    var serverVersion = new MySqlServerVersion(new Version(8, 0));
     config.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
     config.UseMySql(connectionString, serverVersion);
 });

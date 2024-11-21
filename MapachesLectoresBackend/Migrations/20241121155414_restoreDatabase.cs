@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MapachesLectoresBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class restoreDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -86,6 +86,7 @@ namespace MapachesLectoresBackend.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Password = table.Column<string>(type: "longtext", maxLength: 99999, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Role = table.Column<uint>(type: "int unsigned", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "DATETIME(3)", nullable: false, defaultValueSql: "NOW(3)"),
                     UpdatedAt = table.Column<DateTime>(type: "DATETIME(3)", nullable: false, defaultValueSql: "NOW(3)"),
                     ItemUuid = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -94,6 +95,7 @@ namespace MapachesLectoresBackend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_user", x => x.Id);
+                    table.UniqueConstraint("AK_user_ItemUuid", x => x.ItemUuid);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -120,6 +122,7 @@ namespace MapachesLectoresBackend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_book", x => x.Id);
+                    table.UniqueConstraint("AK_book_ItemUuid", x => x.ItemUuid);
                     table.ForeignKey(
                         name: "FK_book_publisher_PublisherId",
                         column: x => x.PublisherId,
@@ -187,6 +190,42 @@ namespace MapachesLectoresBackend.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "review",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BookId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Title = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "varchar(999)", maxLength: 999, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    GeneralRating = table.Column<uint>(type: "int unsigned", nullable: false),
+                    PublishDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "DATETIME(3)", nullable: false, defaultValueSql: "NOW(3)"),
+                    UpdatedAt = table.Column<DateTime>(type: "DATETIME(3)", nullable: false, defaultValueSql: "NOW(3)"),
+                    ItemUuid = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_review", x => new { x.BookId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_review_book_BookId",
+                        column: x => x.BookId,
+                        principalTable: "book",
+                        principalColumn: "ItemUuid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_review_user_UserId",
+                        column: x => x.UserId,
+                        principalTable: "user",
+                        principalColumn: "ItemUuid");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateIndex(
                 name: "IX_author_ItemUuid",
                 table: "author",
@@ -239,6 +278,17 @@ namespace MapachesLectoresBackend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_review_ItemUuid",
+                table: "review",
+                column: "ItemUuid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_review_UserId",
+                table: "review",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_user_ItemUuid",
                 table: "user",
                 column: "ItemUuid",
@@ -255,16 +305,19 @@ namespace MapachesLectoresBackend.Migrations
                 name: "books_categories");
 
             migrationBuilder.DropTable(
-                name: "user");
+                name: "review");
 
             migrationBuilder.DropTable(
                 name: "author");
 
             migrationBuilder.DropTable(
+                name: "category");
+
+            migrationBuilder.DropTable(
                 name: "book");
 
             migrationBuilder.DropTable(
-                name: "category");
+                name: "user");
 
             migrationBuilder.DropTable(
                 name: "publisher");
