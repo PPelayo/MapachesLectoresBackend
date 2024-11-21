@@ -90,6 +90,8 @@ builder.Services.AddScoped <UploadImageBookUseCase>();
 builder.Services.AddScoped<CreateAuthorUseCase>();
 builder.Services.AddScoped<GetAuthorsUseCase>();
 
+builder.Services.AddScoped<GetCategoriesUseCase>();
+
 builder.Services.AddScoped<CreatePublisherUseCase>();
 
 builder.Services.AddScoped<ICreateBookUnitOfWork, CreateBookUnitOfWork>();
