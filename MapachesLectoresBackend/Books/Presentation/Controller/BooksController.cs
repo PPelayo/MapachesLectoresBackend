@@ -76,10 +76,10 @@ public class BooksController(
     }
 
     [Authenticated]
-    [HttpPatch("{bookId}")]
+    [HttpPatch("{bookId}/cover")]
     public async Task<IActionResult> UpdateImage(
         [FromRoute] Guid bookId,
-        [FromBody]IFormFile file
+        [FromForm]IFormFile file
     )
     {
         var result = await uploadImageBookUseCase.InvokeAsync(file, bookId);
