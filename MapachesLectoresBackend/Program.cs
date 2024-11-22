@@ -93,6 +93,7 @@ builder.Services.AddScoped<GetAuthorsUseCase>();
 builder.Services.AddScoped<GetCategoriesUseCase>();
 
 builder.Services.AddScoped<CreatePublisherUseCase>();
+builder.Services.AddScoped<GetPublishersUseCase>();
 
 builder.Services.AddScoped<ICreateBookUnitOfWork, CreateBookUnitOfWork>();
 
