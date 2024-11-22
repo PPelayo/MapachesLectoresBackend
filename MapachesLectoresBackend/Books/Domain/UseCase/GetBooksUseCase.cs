@@ -1,26 +1,44 @@
 ﻿using MapachesLectoresBackend.Books.Domain.Model;
+using MapachesLectoresBackend.Books.Domain.Model.Dto;
 using MapachesLectoresBackend.Books.Domain.Specification;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.Utils;
+using MapachesLectoresBackend.Reviews.Domain.Model;
+using MapachesLectoresBackend.Reviews.Domain.Specification;
 
 namespace MapachesLectoresBackend.Books.Domain.UseCase;
 
 public class GetBooksUseCase(
-    IRepository<Book> bookRepository     
+    IRepository<Book> bookRepository,
+    IRepository<Review> reviewRepository
 )
 {
-    public async Task<PaginationResult<Book>> InvokeAsync(IPagintaion pagintaion, string? search = null)
+    public async Task<PaginationResult<BookWithReviewsAvarageDto>> InvokeAsync(IPagintaion pagintaion,
+        string? search = null)
     {
         var spec = new BookSpecifications.IncludesAuthors()
             .And(new BookSpecifications.IncludesCategories())
             .And(new BookSpecifications.IncludesPublisher());
 
-        if(search != null)
-            spec = spec.And(new BookSpecifications.SearchByName(search));
-        
-        var books = await bookRepository.GetAsync(pagintaion.ToQueryPagination(), spec);
 
-        return books.ToPaginationResult(pagintaion.ToQueryPagination());
+        if (search != null)
+            spec = spec.And(new BookSpecifications.SearchByName(search));
+
+        var paginationQuery = pagintaion.ToQueryPagination();
+
+        var books = (await bookRepository.GetAsync(paginationQuery, spec)).ToList();
+
+        var reviewSpec = new ReviewSpecifications.GetByBookIds(books.Select(b => b.ItemUuid).ToHashSet());
+        var reviewsAvg = await reviewRepository.ExecuteQueryAsync(query =>
+                query.GroupBy(review => review.Book)
+                    .Select((group) =>
+                        new BookWithReviewsAvarageDto(group.Key, group.Average(review => review.GeneralRating),
+                            group.Count())
+                    ), reviewSpec
+        );
+
+
+        return reviewsAvg.ToPaginationResult(paginationQuery);
     }
 }

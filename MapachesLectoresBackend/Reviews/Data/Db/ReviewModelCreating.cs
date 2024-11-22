@@ -15,7 +15,7 @@ public static class ReviewModelCreating {
             entity.HasKey(e => new { e.BookId, e.UserId });
 
             entity.HasOne(r => r.Book)
-                .WithMany()
+                .WithMany(b => b.Reviews)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(r => r.BookId)
                 .HasPrincipalKey(b => b.ItemUuid);

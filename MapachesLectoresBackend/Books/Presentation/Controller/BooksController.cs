@@ -33,11 +33,17 @@ public class BooksController(
     )
     {
         var books = await getBooksUseCase.InvokeAsync(pagination, search);
-        var booksResponses = books.Map(book =>
+        var booksResponses = books.Map(bookWithReviewsAvarageDto =>
         {
-            var categories = book.BooksCategories.Select(bc => bc.Category);
-            var authors = book.BooksAuthors.Select(ba => ba.Author);
-            return book.ToResponseDto(categories, authors, book.Publisher);
+            var categories = bookWithReviewsAvarageDto.Book.BooksCategories.Select(bc => bc.Category);
+            var authors = bookWithReviewsAvarageDto.Book.BooksAuthors.Select(ba => ba.Author);
+            return bookWithReviewsAvarageDto.Book.ToResponseDto(
+                categories,
+                authors,
+                bookWithReviewsAvarageDto.Book.Publisher,
+                reviewsCount: bookWithReviewsAvarageDto.ReviewsCount,
+                reviewsAvarage: bookWithReviewsAvarageDto.ReviewsAvarage
+            );
         });
         return Ok(
             BaseResponse.CreateSuccess(StatusCodes.Status200OK ,booksResponses)

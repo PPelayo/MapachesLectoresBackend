@@ -1,4 +1,5 @@
-﻿using MapachesLectoresBackend.Core.Data.Db;
+﻿using System.Linq.Expressions;
+using MapachesLectoresBackend.Core.Data.Db;
 using MapachesLectoresBackend.Core.Data.Specification;
 using MapachesLectoresBackend.Core.Domain.Model;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
@@ -100,5 +101,22 @@ public class BaseRepository<T>(MapachesDbContext dbContext) : IRepository<T> whe
 
         _dbSet.UpdateRange(entitiesList);
         return Task.CompletedTask;
+    }
+    
+    public async Task<IEnumerable<TResult>> ExecuteQueryAsync<TResult>(
+        Expression<Func<IQueryable<T>, IQueryable<TResult>>> query, ISpecification<T>? spec = null)
+    {
+        var querySpec = ApplySpecification(spec);
+        var resultQuery = query.Compile().Invoke(querySpec);
+        return await resultQuery.ToListAsync();
+    }
+
+    public async Task<IEnumerable<TResult>> ExecuteQueryAsync<TResult>(Expression<Func<IQueryable<T>, IQueryable<TResult>>> query, IPagintaion pagination, ISpecification<T>? spec = null)
+    {
+        var querySpec = ApplySpecification(spec)
+            .Skip(pagination.Offset)
+            .Take(pagination.Limit);
+        var resultQuery = query.Compile().Invoke(querySpec);
+        return await resultQuery.ToListAsync();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MapachesLectoresBackend.Core.Domain.Model;
+using MapachesLectoresBackend.Reviews.Domain.Model;
 
 namespace MapachesLectoresBackend.Books.Domain.Model;
 
@@ -24,4 +25,6 @@ public class Book : BaseEntity
 
     public virtual ICollection<BooksCategories> BooksCategories { get; set; } = null!;
     public virtual ICollection<BooksAuthors> BooksAuthors { get; set; } = null!;
+    
+    public virtual ICollection<Review> Reviews { get; set; } = null!;
 }
