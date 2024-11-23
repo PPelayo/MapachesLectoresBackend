@@ -6,6 +6,8 @@ public class PaginationResult<T>
     public bool HasPrevious { get; set; }
     public int Offset { get; set; }
     public int Limit { get; set; }
+    
+    public int Count { get; set; }
     public IEnumerable<T> Data { get; set; } = new List<T>();
     
     public PaginationResult<TResult> Map<TResult>(Func<T, TResult> map)
@@ -16,6 +18,7 @@ public class PaginationResult<T>
             HasPrevious = HasPrevious,
             Offset = Offset,
             Limit = Limit,
+            Count = Count,
             Data = Data.Select(map)
         };
     }

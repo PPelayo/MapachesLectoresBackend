@@ -8,13 +8,16 @@ public static class PaginationResultConverter
     {
         list = list.ToArray();
         var listCount = list.Count();
+
+        var data = listCount > queryPagination.Limit - 1 ? list.Take(queryPagination.Limit - 1).ToList() : list.ToList();
         return new PaginationResult<T>()
         {
-            Data = listCount > queryPagination.Limit ? list.Take(queryPagination.Limit - 1) : list,
+            Data = data,
             HasNext = listCount > queryPagination.Limit - 1,
             HasPrevious = queryPagination.Offset > 0,
             Limit = queryPagination.Limit - 1,
-            Offset = queryPagination.Offset
+            Offset = queryPagination.Offset,
+            Count = data.Count
         };
     }
 }

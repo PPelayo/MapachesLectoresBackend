@@ -28,7 +28,7 @@ public class GetBooksUseCase(
         var paginationQuery = pagintaion.ToQueryPagination();
 
         var books = (await bookRepository.GetAsync(paginationQuery, spec)).ToList();
-
+        
         var reviewSpec = new ReviewSpecifications.GetByBookIds(books.Select(b => b.ItemUuid).ToHashSet());
         var reviewsAvg = await reviewRepository.ExecuteQueryAsync(query =>
                 query.GroupBy(review => review.Book)
@@ -38,7 +38,12 @@ public class GetBooksUseCase(
                     ), reviewSpec
         );
 
+        var bookWithReviews = books.Select(book =>
+        {
+            var reviews = reviewsAvg.FirstOrDefault(r => r.Book.ItemUuid == book.ItemUuid);
+            return new BookWithReviewsAvarageDto(book, reviews?.ReviewsAvarage ?? 0, reviews?.ReviewsCount ?? 0);
+        });
 
-        return reviewsAvg.ToPaginationResult(paginationQuery);
+        return bookWithReviews.ToPaginationResult(paginationQuery);
     }
 }
