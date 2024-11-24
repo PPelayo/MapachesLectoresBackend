@@ -47,6 +47,9 @@ public static class BookSpecifications
         //No usar StringComparation por que no es un metodo apto para SQL Linq
         : BaseSpecification<Book>(entity => entity.Name.ToLower().Contains(name.ToLower()));
 
+    public sealed class SearchByAuthor(string author)
+        : BaseSpecification<Book>(entity => entity.BooksAuthors.Any(ba => ba.Author.Name.ToLower().Contains(author.ToLower())));
+    
     /// <summary>
     /// Permite recuperar un libro cuya descripcion exacta coincida con la pasada por parametro
     /// </summary>

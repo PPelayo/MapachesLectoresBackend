@@ -1,6 +1,7 @@
 ﻿using MapachesLectoresBackend.Auth.Presentation.Middleware;
 using MapachesLectoresBackend.Books.Domain.Model.Dto;
 using MapachesLectoresBackend.Books.Domain.UseCase;
+using MapachesLectoresBackend.Books.Presentation.Dto;
 using MapachesLectoresBackend.Books.Presentation.Mapper;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Model.Vo;
@@ -27,6 +28,7 @@ public class BooksController(
 {
     
     [HttpGet]
+    [ProducesResponseType(typeof(BaseGenericResponse<PaginationResult<BookResponseDto>, string>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetBooks(
         [FromQuery] UserPagination pagination,
         [FromQuery] string? search  
@@ -51,6 +53,7 @@ public class BooksController(
     }
 
     [HttpGet("{bookId}")]
+    [ProducesResponseType(typeof(BaseGenericResponse<BookResponseDto, string>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetBook(
         [FromRoute] Guid bookId    
     )
@@ -58,11 +61,14 @@ public class BooksController(
         var result = await getBookByUuidUseCase.InvokeAsync(bookId);
 
         return result.ActionResultHanlder(
-            book =>
+            wrapper =>
             {
-                var categories = book.BooksCategories.Select(bc => bc.Category);
-                var authors = book.BooksAuthors.Select(ba => ba.Author);
-                return Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, book.ToResponseDto(categories, authors, book.Publisher)));
+                var categories = wrapper.Book.BooksCategories.Select(bc => bc.Category);
+                var authors = wrapper.Book.BooksAuthors.Select(ba => ba.Author);
+                return Ok(
+                    BaseResponse.CreateSuccess(StatusCodes.Status200OK,
+                        wrapper.Book.ToResponseDto(categories, authors, wrapper.Book.Publisher, wrapper.ReviewsCount, wrapper.ReviewsAvarage)
+                    ));
             },
             error => error.ActionResult
         );

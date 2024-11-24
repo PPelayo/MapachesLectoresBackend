@@ -23,7 +23,12 @@ public class GetBooksUseCase(
 
 
         if (search != null)
-            spec = spec.And(new BookSpecifications.SearchByName(search));
+        {
+            var searchSpec = new BookSpecifications.SearchByName(search)
+                .Or(new BookSpecifications.SearchByAuthor(search));
+            
+            spec = spec.And(searchSpec);
+        }
 
         var paginationQuery = pagintaion.ToQueryPagination();
 
