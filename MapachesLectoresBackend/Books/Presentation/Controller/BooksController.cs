@@ -23,7 +23,8 @@ public class BooksController(
     GetReviewsFromBookUseCase getReviewsFromBookUseCase,
     CreateReviewUseCase createReviewUseCase,
     CreateBookUseCase createBookUseCase,
-    UploadImageBookUseCase uploadImageBookUseCase
+    UploadImageBookUseCase uploadImageBookUseCase,
+    GetReviewFromBookOfUserUseCase getReviewFromBookOfUserUseCase
 ) : ControllerBase
 {
     
@@ -112,6 +113,21 @@ public class BooksController(
         return result.ActionResultHanlder(
             reviews => 
                 Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, reviews.Map(review => review.ToReviewResponseDto(review.User)))),
+            error => error.ActionResult
+        );
+    }
+    
+    
+    [Authenticated]
+    [HttpGet("{bookId}/reviews/me")]
+    public async Task<IActionResult> GetReviewOfUser(
+        [FromRoute] Guid bookId
+    )
+    {
+        var userId = contextService.Uuid;
+        var result = await getReviewFromBookOfUserUseCase.InvokeAsync(bookId, userId.Value);
+        return result.ActionResultHanlder(
+            review => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, review.ToReviewResponseDto(review.User))),    
             error => error.ActionResult
         );
     }

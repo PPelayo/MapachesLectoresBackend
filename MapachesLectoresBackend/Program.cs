@@ -103,6 +103,7 @@ builder.Services.AddScoped<ICreateBookUnitOfWork, CreateBookUnitOfWork>();
 
 builder.Services.AddScoped<CreateReviewUseCase>();
 builder.Services.AddScoped<GetReviewsFromBookUseCase>();
+builder.Services.AddScoped<GetReviewFromBookOfUserUseCase>();
 
 #endregion
 
