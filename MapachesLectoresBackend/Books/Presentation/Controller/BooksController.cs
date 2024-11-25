@@ -35,11 +35,11 @@ public class BooksController(
     public async Task<IActionResult> GetBooks(
         [FromQuery] UserPagination pagination,
         [FromQuery] string? search,
-        [FromQuery] HashSet<string>? categories,
-        [FromQuery] string? order
+        [FromQuery] string? order = null,
+        [FromQuery] HashSet<string>? categories = null
     )
     {
-        BooksOrderEnum bookOrder = BooksOrderEnum.Default;
+        var bookOrder = BooksOrderEnum.Default;
         if(order != null)
         {
             var orderResult = BookOrderSerializer.Validate(order);
@@ -52,10 +52,10 @@ public class BooksController(
         var books = await getBooksUseCase.InvokeAsync(pagination, search, categories, bookOrder);
         var booksResponses = books.Map(bookWithReviewsAvarageDto =>
         {
-            var categories = bookWithReviewsAvarageDto.Book.BooksCategories.Select(bc => bc.Category);
+            var categoriesOfBooks = bookWithReviewsAvarageDto.Book.BooksCategories.Select(bc => bc.Category);
             var authors = bookWithReviewsAvarageDto.Book.BooksAuthors.Select(ba => ba.Author);
             return bookWithReviewsAvarageDto.Book.ToResponseDto(
-                categories,
+                categoriesOfBooks,
                 authors,
                 bookWithReviewsAvarageDto.Book.Publisher,
                 reviewsCount: bookWithReviewsAvarageDto.ReviewsCount,
