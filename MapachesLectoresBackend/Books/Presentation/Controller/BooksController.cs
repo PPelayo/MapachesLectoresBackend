@@ -1,8 +1,10 @@
 ﻿using MapachesLectoresBackend.Auth.Presentation.Middleware;
+using MapachesLectoresBackend.Books.Domain.Model;
 using MapachesLectoresBackend.Books.Domain.Model.Dto;
 using MapachesLectoresBackend.Books.Domain.UseCase;
 using MapachesLectoresBackend.Books.Presentation.Dto;
 using MapachesLectoresBackend.Books.Presentation.Mapper;
+using MapachesLectoresBackend.Books.Presentation.Utils;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Model.Vo;
 using MapachesLectoresBackend.Core.Domain.Services;
@@ -32,10 +34,22 @@ public class BooksController(
     [ProducesResponseType(typeof(BaseGenericResponse<PaginationResult<BookResponseDto>, string>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetBooks(
         [FromQuery] UserPagination pagination,
-        [FromQuery] string? search  
+        [FromQuery] string? search,
+        [FromQuery] HashSet<string>? categories,
+        [FromQuery] string? order
     )
     {
-        var books = await getBooksUseCase.InvokeAsync(pagination, search);
+        BooksOrderEnum bookOrder = BooksOrderEnum.Default;
+        if(order != null)
+        {
+            var orderResult = BookOrderSerializer.Validate(order);
+            if (orderResult.IsFailure)
+                return orderResult.FailureResult.Error.ActionResult;
+
+            bookOrder = orderResult.SuccessResult.Data;
+        }
+
+        var books = await getBooksUseCase.InvokeAsync(pagination, search, categories, bookOrder);
         var booksResponses = books.Map(bookWithReviewsAvarageDto =>
         {
             var categories = bookWithReviewsAvarageDto.Book.BooksCategories.Select(bc => bc.Category);

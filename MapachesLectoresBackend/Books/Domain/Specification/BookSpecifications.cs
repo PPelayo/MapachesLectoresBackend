@@ -56,4 +56,27 @@ public static class BookSpecifications
     /// <param name="name"></param>
     public sealed class GetByName(string name)
         : BaseSpecification<Book>(entity => entity.Name.Trim().ToLower() == name.Trim().ToLower());
+
+    public sealed class GetByCategoriesNames(ISet<string> categories)
+        : BaseSpecification<Book>(entity => entity.BooksCategories.Any(bc => categories.Contains(bc.Category.Description)));
+
+    public sealed class OrderBy : BaseSpecification<Book>
+    {
+        public OrderBy(BooksOrderEnum bookOrder)
+        {
+            switch (bookOrder) {
+                case BooksOrderEnum.Popular:
+                    ApplyOrderBy(entity => entity.Reviews.Average(rev => rev.GeneralRating));
+                    break;
+
+                case BooksOrderEnum.NameAsc:
+                    ApplyOrderBy(entity => entity.Name);
+                    break;
+
+                case BooksOrderEnum.NameDesc:
+                    ApplyOrderByDescending(entity => entity.Name);
+                    break;
+            }
+        }
+    }
 }

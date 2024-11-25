@@ -3,6 +3,7 @@ using MapachesLectoresBackend.Books.Domain.Model.Dto;
 using MapachesLectoresBackend.Books.Domain.Specification;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Repository;
+using MapachesLectoresBackend.Core.Domain.Specification;
 using MapachesLectoresBackend.Core.Domain.Utils;
 using MapachesLectoresBackend.Reviews.Domain.Model;
 using MapachesLectoresBackend.Reviews.Domain.Specification;
@@ -14,8 +15,12 @@ public class GetBooksUseCase(
     IRepository<Review> reviewRepository
 )
 {
-    public async Task<PaginationResult<BookWithReviewsAvarageDto>> InvokeAsync(IPagintaion pagintaion,
-        string? search = null)
+    public async Task<PaginationResult<BookWithReviewsAvarageDto>> InvokeAsync(
+        IPagintaion pagintaion,
+        string? search = null,
+        ISet<string>? categories = null,
+        BooksOrderEnum booksOrder = BooksOrderEnum.Default
+    )
     {
         var spec = new BookSpecifications.IncludesAuthors()
             .And(new BookSpecifications.IncludesCategories())
@@ -29,6 +34,11 @@ public class GetBooksUseCase(
             
             spec = spec.And(searchSpec);
         }
+
+        if(categories != null)
+            spec = spec.And(new BookSpecifications.GetByCategoriesNames(categories));
+
+        spec = spec.And(new BookSpecifications.OrderBy(booksOrder));
 
         var paginationQuery = pagintaion.ToQueryPagination();
 
