@@ -66,7 +66,7 @@ public static class BookSpecifications
         {
             switch (bookOrder) {
                 case BooksOrderEnum.Popular:
-                    ApplyOrderBy(entity => entity.Reviews.Average(rev => rev.GeneralRating));
+                    ApplyOrderByDescending(entity => entity.Reviews.Average(rev => rev.GeneralRating));
                     break;
 
                 case BooksOrderEnum.NameAsc:
