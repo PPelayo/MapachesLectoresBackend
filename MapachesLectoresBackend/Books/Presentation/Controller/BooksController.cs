@@ -26,7 +26,8 @@ public class BooksController(
     CreateReviewUseCase createReviewUseCase,
     CreateBookUseCase createBookUseCase,
     UploadImageBookUseCase uploadImageBookUseCase,
-    GetReviewFromBookOfUserUseCase getReviewFromBookOfUserUseCase
+    GetReviewFromBookOfUserUseCase getReviewFromBookOfUserUseCase,
+    DeleteBookUseCase deleteBookUseCase
 ) : ControllerBase
 {
     
@@ -85,6 +86,20 @@ public class BooksController(
                         wrapper.Book.ToResponseDto(categories, authors, wrapper.Book.Publisher, wrapper.ReviewsCount, wrapper.ReviewsAvarage)
                     ));
             },
+            error => error.ActionResult
+        );
+    }
+
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpDelete("{bookId}")]
+    public async Task<IActionResult> DeleteBook(
+        [FromRoute] Guid bookId
+    )
+    {
+        var result = await deleteBookUseCase.InvokeAsync(bookId);
+        return result.ActionResultHanlder(
+            _ => NoContent(),
             error => error.ActionResult
         );
     }
