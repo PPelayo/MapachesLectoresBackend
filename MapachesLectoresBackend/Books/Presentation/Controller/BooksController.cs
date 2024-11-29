@@ -12,6 +12,7 @@ using MapachesLectoresBackend.Core.Presentation.Dtos;
 using MapachesLectoresBackend.Reviews.Domain.UseCase;
 using MapachesLectoresBackend.Reviews.Presentation.Dto;
 using MapachesLectoresBackend.Reviews.Presentation.Mapper;
+using MapachesLectoresBackend.Users.Domain.Model.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MapachesLectoresBackend.Books.Presentation.Controller;
@@ -93,6 +94,8 @@ public class BooksController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{bookId}")]
+    [Authenticated]
+    [CheckUserRole(UserRoleEnum.Admin)]
     public async Task<IActionResult> DeleteBook(
         [FromRoute] Guid bookId
     )
@@ -116,7 +119,7 @@ public class BooksController(
             error => error.ActionResult
         );
     }
-
+    
     [Authenticated]
     [HttpPatch("{bookId}/cover")]
     public async Task<IActionResult> UpdateImage(
