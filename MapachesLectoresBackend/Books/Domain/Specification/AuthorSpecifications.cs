@@ -15,4 +15,7 @@ public static class AuthorSpecifications {
     public sealed class SearchByNameAndLastName(string search)
         : BaseSpecification<Author>(entity => 
            (entity.Name + " " + entity.LastName).Trim().ToLower().Contains(search.Trim().ToLower()));
+    
+    public sealed class GetByBookId(uint bookId)
+        : BaseSpecification<Author>(entity => entity.BooksAuthors.Any(ba => ba.BookId == bookId));
 }

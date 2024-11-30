@@ -28,7 +28,8 @@ public class BooksController(
     CreateBookUseCase createBookUseCase,
     UploadImageBookUseCase uploadImageBookUseCase,
     GetReviewFromBookOfUserUseCase getReviewFromBookOfUserUseCase,
-    DeleteBookUseCase deleteBookUseCase
+    DeleteBookUseCase deleteBookUseCase,
+    UpdateBookUseCase updateBookUseCase
 ) : ControllerBase
 {
     
@@ -133,8 +134,23 @@ public class BooksController(
             uri => Ok(BaseResponse.CreateSuccess(200, uri.AbsoluteUri)),
             error => error.ActionResult
         );
-    }  
+    }
 
+    [HttpPut("{bookId}")]
+    [Authenticated]
+    [CheckUserRole(UserRoleEnum.Moderator, UserRoleEnum.Admin)]
+    public async Task<IActionResult> Update(
+        [FromRoute] Guid bookId,
+        [FromBody] CreateBookRequestDto request
+    )
+    {
+        var result = await updateBookUseCase.InvokeAsync(bookId, request);
+        return result.ActionResultHanlder(
+            book => Ok(BaseResponse.CreateSuccess(StatusCodes.Status200OK, book.ToResponseDto())),
+            error => error.ActionResult
+        );
+    }
+    
     [HttpGet("{bookId}/reviews")]
     public async Task<IActionResult> GetReviews(
         [FromRoute] Guid bookId,

@@ -15,9 +15,9 @@ namespace MapachesLectoresBackend.Auth.Presentation.Middleware;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class CheckUserRoleAttribute : TypeFilterAttribute
 {
-    public CheckUserRoleAttribute(UserRoleEnum role) : base(typeof(CheckUserRoleFilter))
+    public CheckUserRoleAttribute(params UserRoleEnum[] roles) : base(typeof(CheckUserRoleFilter))
     {
-        Arguments = new object[] { role };
+        Arguments = new object[] { roles };
     }
 }
 
@@ -27,19 +27,19 @@ public class CheckUserRoleAttribute : TypeFilterAttribute
 public class CheckUserRoleFilter : IAsyncActionFilter
 {
     private readonly IHttpContextService _httpContextService;
-    private readonly UserRoleEnum _requiredRole;
+    private readonly UserRoleEnum[] _requiredRoles;
 
-    public CheckUserRoleFilter(IHttpContextService httpContextService, UserRoleEnum requiredRole)
+    public CheckUserRoleFilter(IHttpContextService httpContextService, UserRoleEnum[] requiredRoles)
     {
         _httpContextService = httpContextService ?? throw new ArgumentNullException(nameof(httpContextService));
-        _requiredRole = requiredRole;
+        _requiredRoles = requiredRoles;
     }
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         var userRole = _httpContextService.UserRole;
 
-        if (userRole != _requiredRole)
+        if (!_requiredRoles.Contains(userRole))
         {
             // Si el usuario no tiene el rol requerido, retorna un 403 Forbidden
             context.Result = new ObjectResult(BaseResponse.CreateError(403, "No tienes acceso para esta acción")) { StatusCode = 403 };
