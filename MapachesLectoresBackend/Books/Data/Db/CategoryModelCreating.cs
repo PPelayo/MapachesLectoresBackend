@@ -24,8 +24,9 @@ public class CategoryModelCreating
         [
             new Category { Id = 1, Description = "Terror", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174000" },
             new Category { Id = 2, Description = "Romance", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174001" },
+            new Category { Id = 16, Description = "Dark Romance", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174015" },
             new Category { Id = 3, Description = "Suspense", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174002" },
-            new Category { Id = 4, Description = "Policiaca", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174003" },
+            new Category { Id = 4, Description = "Trhiller", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174003" },
             new Category { Id = 5, Description = "Ciencia Ficción", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174004" },
             new Category { Id = 6, Description = "Fantasía", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174005" },
             new Category { Id = 7, Description = "Aventuras", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174006" },
@@ -37,6 +38,7 @@ public class CategoryModelCreating
             new Category { Id = 13, Description = "Autoayuda", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174012" },
             new Category { Id = 14, Description = "Cocina", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174013" },
             new Category { Id = 15, Description = "Viajes", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174014" },
+            new Category { Id = 17, Description = "Juegos", CreatedAt = DateTime.Parse("2024-01-01"), UpdatedAt = DateTime.Parse("2024-01-01"), ItemUuid = "123e4567-e89b-12d3-a456-426614174016" },
         ];
     }
 }
