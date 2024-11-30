@@ -20,7 +20,7 @@ public class CreateBookUseCase(
         if(validationResult.IsFailure)
             return DataResult<Book>.CreateFailure(validationResult.FailureResult.Error);
 
-        var (publisher, authors, categories) = validationResult.SuccessResult.Data;
+        var (_, publisher, authors, categories) = validationResult.SuccessResult.Data;
         
         try
         {

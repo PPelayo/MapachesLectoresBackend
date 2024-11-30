@@ -4,6 +4,7 @@ using MapachesLectoresBackend.Books.Domain.Service;
 using MapachesLectoresBackend.Books.Domain.Specification;
 using MapachesLectoresBackend.Books.Domain.UnitOfWork;
 using MapachesLectoresBackend.Core.Domain.Extensions;
+using MapachesLectoresBackend.Core.Domain.Model.Errors;
 using MapachesLectoresBackend.Core.Domain.Model.ResultPattern;
 using MapachesLectoresBackend.Core.Domain.UseCase;
 
@@ -16,16 +17,20 @@ public class UpdateBookUseCase(
 {
     public async Task<DataResult<Book>> InvokeAsync(Guid bookId, CreateBookRequestDto request)
     {
-        var validationResult = await bookValidationService.ValidateBookRequestAsync(request);
+        var validationResult = await bookValidationService.ValidateBookRequestAsync(request, false);
         
         if(validationResult.IsFailure)
             return DataResult<Book>.CreateFailure(validationResult.FailureResult.Error);
 
-        var (publisher, authors, categories) = validationResult.SuccessResult.Data;
+        var (bookWithName, publisher, authors, categories) = validationResult.SuccessResult.Data;
         
         var bookResult = await getItemByUuidUseCase.InvokeAsync(bookId);
         if(bookResult.IsFailure)
             return DataResult<Book>.CreateFailure(bookResult.FailureResult.Error);
+        
+        //Si el nombre del libro que estamos editando esta cogido por otro devolvemos error, pero si es el mimos libro no hay problema
+        if(bookWithName != null && bookId.ToString() != bookWithName.ItemUuid)
+            return DataResult<Book>.CreateFailure(new ResourceAlreadyExists(nameof(Book)));
         
         var book = bookResult.SuccessResult.Data;
         
