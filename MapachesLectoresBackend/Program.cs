@@ -60,7 +60,7 @@ builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWor
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 
 builder.Services.AddScoped(typeof(IHttpContextService), typeof(HttpContextService));
-builder.Services.AddScoped<IImagenService, ClaudinaryImagenService>();
+builder.Services.AddScoped<IImagenService, CloudinaryImagenService>();
 
 builder.Services.AddScoped(typeof(GetItemByUuidUseCase<>));
 
