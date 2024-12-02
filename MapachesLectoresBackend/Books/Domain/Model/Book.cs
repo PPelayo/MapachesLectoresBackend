@@ -4,7 +4,7 @@ using MapachesLectoresBackend.Reviews.Domain.Model;
 
 namespace MapachesLectoresBackend.Books.Domain.Model;
 
-public class Book : BaseEntity
+public class Book : BaseEntity, IBook
 {
     public uint Id { get; set; }
     
