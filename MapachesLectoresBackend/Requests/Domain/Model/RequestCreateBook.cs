@@ -17,5 +17,13 @@ namespace MapachesLectoresBackend.Requests.Domain.Model
         public required string CoverUrl { get; set; }
         public required uint NumberOfPages { get; set; }
         public required uint PublisherId { get; set; }
+
+        public ICollection<Guid> AuthorsIds { get; set; } = [];
+        public ICollection<Guid> CategoriesIds { get; set; } = [];
+
+        public virtual ICollection<Author>? Authors { get; set; } = null;
+        public virtual ICollection<Category>? Categories { get; set; } = null;
+
+
     }
 }
