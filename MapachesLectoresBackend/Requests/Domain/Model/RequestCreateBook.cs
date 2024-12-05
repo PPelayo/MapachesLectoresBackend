@@ -6,7 +6,7 @@ namespace MapachesLectoresBackend.Requests.Domain.Model
 {
     public class RequestCreateBook : BaseEntity, IRequest, IBook
     {
-        public uint Id { get; set; }
+        public Guid Id { get; set; }
         public uint UserId { get; set; }
         public virtual User? User { get; set; } = null;
 

@@ -4,8 +4,8 @@ using MapachesLectoresBackend.Core.Domain.Model;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.Specification;
-using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace MapachesLectoresBackend.Core.Data.Repository
 {
@@ -50,9 +50,14 @@ namespace MapachesLectoresBackend.Core.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<T>> GetAsync(IPagintaion paginationParameter, ISpecification<T>? spec = null)
+        public async Task<IEnumerable<T>> GetAsync(IPagintaion paginationParameter, ISpecification<T>? spec = null)
         {
-            throw new NotImplementedException();
+            var query = ApplySpecification(spec);
+            return await query
+                .Take(paginationParameter.Limit)
+                .Skip(paginationParameter.Offset)
+                .ToListAsync();
+                
         }
 
         public Task<T?> GetByUuidAsync(string uuid)
@@ -60,10 +65,14 @@ namespace MapachesLectoresBackend.Core.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<T?> GetFirstAsync(ISpecification<T> spec)
+        public async Task<T?> GetFirstAsync(ISpecification<T> spec)
         {
             var query = ApplySpecification(spec);
-            return query.FirstOrDefaultAsync();
+            var result = await query.FirstOrDefaultAsync();
+            if (result == default(T))
+                return null;
+
+            return result;
         }
 
         public async Task<T> InsertAsync(T entity)

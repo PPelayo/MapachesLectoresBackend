@@ -1,5 +1,6 @@
 ﻿using MapachesLectoresBackend.Books.Domain.Model.Dto;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
+using MapachesLectoresBackend.Core.Presentation.Dtos;
 using MapachesLectoresBackend.Requests.Domain.UseCase;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ namespace MapachesLectoresBackend.Requests.Presentation.Controller
              [FromQuery] UserPagination pagination    
         )
         {
-            var result = getRequestsCreateBookUseCase.InvokeAsync(pagination);
+            var result = await getRequestsCreateBookUseCase.InvokeAsync(pagination);
 
             return Ok(result);
         }
@@ -30,7 +31,10 @@ namespace MapachesLectoresBackend.Requests.Presentation.Controller
         {
             var result = await addRequestCreateBookUseCase.InvokeAsync(createBookRequestDto);
 
-            return Ok(result);
+            return result.ActionResultHanlder(
+                request => Created("",BaseResponse.CreateSuccess(201, request)),
+                error => error.ActionResult
+            );
         }
 
     }

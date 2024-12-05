@@ -10,8 +10,10 @@ namespace MapachesLectoresBackend.Core.Data.Db
 
         public MongoDbDatabase(IConfiguration configuration)
         {
-            MongoClient = new MongoClient(configuration.GetValue<string>("mongoDbConnectionString"));
-            MongoDatabase = MongoClient.GetDatabase(configuration.GetValue<string>("mongoDbName"));
+            var connString = configuration.GetValue<string>("MONGODB_CONNECTION_STRING");
+            var dbName = configuration.GetValue<string>("MONGODB_DBNAME");
+            MongoClient = new MongoClient(connString);
+            MongoDatabase = MongoClient.GetDatabase(dbName);
         }
 
     }

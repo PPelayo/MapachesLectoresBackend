@@ -17,9 +17,13 @@ using MapachesLectoresBackend.Core.Domain.Services;
 using MapachesLectoresBackend.Core.Domain.UnitOfWork;
 using MapachesLectoresBackend.Core.Domain.UseCase;
 using MapachesLectoresBackend.Core.Presentation.Specification;
+using MapachesLectoresBackend.Requests.Domain.Model;
+using MapachesLectoresBackend.Requests.Domain.UseCase;
 using MapachesLectoresBackend.Reviews.Domain.UseCase;
 using MapachesLectoresBackend.Users.Domain.UseCase;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +60,8 @@ builder.Services.AddDbContext<MapachesDbContext>(config =>
 builder.Services.AddControllers();
 
 #region CORE
+builder.Services.AddScoped<MongoDbDatabase>();
+
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 
@@ -112,7 +118,16 @@ builder.Services.AddScoped<GetReviewFromBookOfUserUseCase>();
 
 #endregion
 
+#region REQUESTS
 
+builder.Services.AddScoped <IRepository<RequestCreateBook>, BaseMongoRepository<RequestCreateBook>>();
+BsonSerializer.RegisterSerializer(typeof(Guid), new MongoDB.Bson.Serialization.Serializers.GuidSerializer(GuidRepresentation.Standard));
+
+
+builder.Services.AddScoped<AddRequestCreateBookUseCase>();
+builder.Services.AddScoped<GetRequestsCreateBookUseCase>();
+
+#endregion
 
 
 var app = builder.Build();
