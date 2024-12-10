@@ -119,4 +119,9 @@ public class BaseRepository<T>(MapachesDbContext dbContext) : IRepository<T> whe
         var resultQuery = query.Compile().Invoke(querySpec);
         return await resultQuery.ToListAsync();
     }
+
+    public Task SaveAsync()
+    {
+        return dbContext.SaveChangesAsync();
+    }
 }

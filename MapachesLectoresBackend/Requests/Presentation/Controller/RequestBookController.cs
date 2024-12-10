@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MapachesLectoresBackend.Requests.Presentation.Controller
 {
     [ApiController]
+    [Route("[controller]")]
     public class RequestBookController(
         GetRequestsCreateBookUseCase getRequestsCreateBookUseCase,
         AddRequestCreateBookUseCase addRequestCreateBookUseCase

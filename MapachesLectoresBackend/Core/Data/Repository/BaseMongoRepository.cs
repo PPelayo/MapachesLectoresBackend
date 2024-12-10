@@ -4,15 +4,17 @@ using MapachesLectoresBackend.Core.Domain.Model;
 using MapachesLectoresBackend.Core.Domain.Model.Pagination;
 using MapachesLectoresBackend.Core.Domain.Repository;
 using MapachesLectoresBackend.Core.Domain.Specification;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace MapachesLectoresBackend.Core.Data.Repository
 {
-    public class BaseMongoRepository<T>(MongoDbDatabase mongoDbDatabase) : IRepository<T> where T : class, IEntity
+    public class BaseMongoRepository<T>(
+        //MongoDbDatabase mongoDbDatabase
+        MongoDbContext mongoDbContext
+    ) : IRepository<T> where T : class, IEntity
     {
-        private readonly IMongoCollection<T> _mongoCollection = mongoDbDatabase.MongoDatabase.GetCollection<T>(nameof(T));
-
+        //private readonly IMongoCollection<T> _mongoCollection = mongoDbDatabase.MongoDatabase.GetCollection<T>(typeof(T).Name);
+        private readonly DbSet<T> _mongoCollection = mongoDbContext.Set<T>();
 
         private IQueryable<T> ApplySpecification(ISpecification<T>? spec)
         {
@@ -77,7 +79,7 @@ namespace MapachesLectoresBackend.Core.Data.Repository
 
         public async Task<T> InsertAsync(T entity)
         {
-            await _mongoCollection.InsertOneAsync(entity);
+            await _mongoCollection.AddAsync(entity);
             return entity;
         }
 
@@ -94,6 +96,11 @@ namespace MapachesLectoresBackend.Core.Data.Repository
         public Task UpdateRangeAsync(IEnumerable<T> entities)
         {
             throw new NotImplementedException();
+        }
+
+        public Task SaveAsync()
+        {
+            return mongoDbContext.SaveChangesAsync();
         }
     }
 }

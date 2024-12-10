@@ -24,6 +24,7 @@ using MapachesLectoresBackend.Users.Domain.UseCase;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +62,11 @@ builder.Services.AddControllers();
 
 #region CORE
 builder.Services.AddScoped<MongoDbDatabase>();
+builder.Services.AddDbContext<MongoDbContext>(opt =>
+{
+    var mongoClient = new MongoClient(builder.Configuration["MONGODB_CONNECTION_STRING"]);
+    opt.UseMongoDB(mongoClient, builder.Configuration["MONGODB_DBNAME"] ?? "MapachesLectores");
+});
 
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));

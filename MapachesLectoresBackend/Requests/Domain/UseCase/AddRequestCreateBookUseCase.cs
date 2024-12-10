@@ -1,10 +1,7 @@
-﻿using MapachesLectoresBackend.Books.Domain.Model;
-using MapachesLectoresBackend.Books.Domain.Model.Dto;
+﻿using MapachesLectoresBackend.Books.Domain.Model.Dto;
 using MapachesLectoresBackend.Books.Domain.Service;
-using MapachesLectoresBackend.Core.Domain.Model.Errors;
 using MapachesLectoresBackend.Core.Domain.Model.ResultPattern;
 using MapachesLectoresBackend.Core.Domain.Repository;
-using MapachesLectoresBackend.Core.Domain.UseCase;
 using MapachesLectoresBackend.Requests.Domain.Model;
 
 namespace MapachesLectoresBackend.Requests.Domain.UseCase
@@ -37,6 +34,8 @@ namespace MapachesLectoresBackend.Requests.Domain.UseCase
             };
 
             var insertedRequest = await repository.InsertAsync(request);
+
+            await repository.SaveAsync();
 
             return DataResult<RequestCreateBook>.CreateSuccess(insertedRequest);
         }

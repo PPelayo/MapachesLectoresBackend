@@ -29,7 +29,9 @@ public interface IRepository<T> where T : IEntity
 
     public Task<IEnumerable<TResult>> ExecuteQueryAsync<TResult>(
         Expression<Func<IQueryable<T>, IQueryable<TResult>>> query, ISpecification<T>? spec = null);
-    
+
     public Task<IEnumerable<TResult>> ExecuteQueryAsync<TResult>(
         Expression<Func<IQueryable<T>, IQueryable<TResult>>> query, IPagintaion pagination, ISpecification<T>? spec = null);
+
+    public Task SaveAsync();
 }
