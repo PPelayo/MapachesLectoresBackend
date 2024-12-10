@@ -5,7 +5,7 @@ namespace MapachesLectoresBackend.Requests.Domain.Model
 {
     public interface IRequest : IEntity
     {
-        uint UserId { get; set; }
+        Guid UserId { get; set; }
         User? User { get; set; }
     }
 }

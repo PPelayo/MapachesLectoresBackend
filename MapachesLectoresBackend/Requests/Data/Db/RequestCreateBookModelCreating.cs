@@ -1,5 +1,4 @@
-﻿using MapachesLectoresBackend.Books.Domain.Model;
-using MapachesLectoresBackend.Core.Data.Db;
+﻿using MapachesLectoresBackend.Core.Data.Db;
 using MapachesLectoresBackend.Requests.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.EntityFrameworkCore.Extensions;
@@ -17,6 +16,8 @@ namespace MapachesLectoresBackend.Requests.Data.Db
                 entity.ApplyBaseEntityConfig();
                 entity.Ignore(r => r.Authors);
                 entity.Ignore(r => r.Categories);
+                entity.Ignore(r => r.User);
+                entity.Ignore(r => r.Publisher);
 
             });
         }

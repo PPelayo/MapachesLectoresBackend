@@ -2,16 +2,19 @@
 using MapachesLectoresBackend.Books.Domain.Service;
 using MapachesLectoresBackend.Core.Domain.Model.ResultPattern;
 using MapachesLectoresBackend.Core.Domain.Repository;
+using MapachesLectoresBackend.Core.Domain.UseCase;
 using MapachesLectoresBackend.Requests.Domain.Model;
+using MapachesLectoresBackend.Users.Domain.Model;
 
 namespace MapachesLectoresBackend.Requests.Domain.UseCase
 {
     public class AddRequestCreateBookUseCase(
         IRepository<RequestCreateBook> repository,
-        BookValidationService bookValidationService
+        BookValidationService bookValidationService,
+        GetItemByUuidUseCase<User> getUserByUuidUseCase
     )
     {
-        public async Task<DataResult<RequestCreateBook>> InvokeAsync(CreateBookRequestDto createBookRequestDto)
+        public async Task<DataResult<RequestCreateBook>> InvokeAsync(CreateBookRequestDto createBookRequestDto, Guid userId)
         {
             var validationResult = await bookValidationService.ValidateBookRequestAsync(createBookRequestDto);
 
@@ -20,9 +23,14 @@ namespace MapachesLectoresBackend.Requests.Domain.UseCase
 
             var (_, publisher, authors, categories) = validationResult.SuccessResult.Data;
 
+            var userReuslt = await getUserByUuidUseCase.InvokeAsync(userId);
+            if (userReuslt.IsFailure)
+                return DataResult<RequestCreateBook>.CreateFailure(userReuslt.FailureResult.Error);
+
             var request = new RequestCreateBook()
             {
                 Id = Guid.NewGuid(),
+                UserId = userId,
                 Name = createBookRequestDto.Name,
                 Synopsis = createBookRequestDto.Synopsis,
                 NumberOfPages = createBookRequestDto.NumberOfPages,
